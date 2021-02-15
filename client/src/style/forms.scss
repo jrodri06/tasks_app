@@ -1,0 +1,68 @@
+@mixin flexColumn () {
+    display: flex;
+    flex-direction: column;
+}
+
+$inputMargin: 10px 0;
+$inputPadding: 10px;
+
+form {
+    @include flexColumn();
+
+    h1 {
+        text-align: center;
+    }
+
+    label{
+        margin: $inputMargin;
+        @include flexColumn();
+
+        select {
+            padding: $inputPadding;
+            margin: $inputMargin;
+            border-radius: $radius;
+            border: 1px;
+            background-color: #fff;
+        }
+    }
+
+    fieldset  {
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        border: 0;
+
+        input {
+            background-color: #fff;
+        }
+
+        input[type="date"] {
+            width: 97%;
+        }
+    }
+
+    input {
+        padding: $inputPadding;
+        margin: $inputMargin;
+        border-radius: $radius;
+        border: 1px;
+    }
+
+    .btn {
+        background-color: #169adc;
+        color: #fff;
+        border-radius: $radius;
+        border: 1px;
+    }
+
+    .exit {
+        font-size: 1.5rem;
+        cursor: pointer;
+        position: absolute;
+        right: 10px;
+    }
+}
+
+form[name="task-erasure"] {
+    margin-top: 20px;
+}

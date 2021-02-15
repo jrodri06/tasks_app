@@ -1,0 +1,31 @@
+.todo-subtasks {
+    .subtasks-area {
+        padding: 10px 0;
+
+        .subtask-total-price {
+            text-align: right;
+        }
+    
+        .subTasks {
+            display: flex;
+            margin: 5px 0;
+            align-items: baseline;
+    
+            input {
+                margin: 10px;
+            }
+
+            .concluded {
+                text-decoration: line-through;
+            }
+        }
+    }
+
+    span {
+        padding: 10px 0;
+        margin: 0 10px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+}
+

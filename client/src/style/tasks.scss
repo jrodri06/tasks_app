@@ -1,0 +1,71 @@
+
+.todo-task {
+    background-color: #fff;
+    border-radius: $radius;
+    padding: $allPadding;
+    min-width: 250px;
+    margin: 10px;
+
+    .todo-name {
+        display: flex;
+        font-size: 1.2rem;
+        justify-content: space-between;
+        
+        input {
+            height: 17px;
+            width: 30px;
+        }
+
+        .todo-price {
+            text-decoration: underline;
+            margin: 0 10px;
+        }
+    }
+
+    .todo-description {
+        text-decoration: underline;
+        text-align: center;
+        margin: $marginElements;
+    }
+
+    .todo-special {
+        background-color: #f9f6e8;
+    }
+
+    .Other {
+        background-color: #f5f8f9;
+    }
+
+    .Food {
+        background-color: #f2fcee;
+    }
+
+    .Work {
+        background-color: #eef2fc;
+    }
+
+    .todo-type {
+        padding: $allPadding;
+        border-radius: $radius;
+        color: #82878e;
+        font-weight: bold;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: $marginElements;
+
+        select {
+            padding: 3px;
+        }
+    }
+
+    form[name="task-erasure"] {
+        input {
+            color: #b13046;
+            border-radius: $radius;
+            background-color: #fceff0;
+            border: 0px;
+            font-size: 1rem;
+        }
+    }
+}
