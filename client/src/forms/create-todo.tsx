@@ -82,21 +82,17 @@ const CreateToDo = () => {
             case 'Food':
                 const validFoodTypes = foodTypeValidation(toDo.specialInput!);
                 if(validFoodTypes) {
-                    await formPath(toDo);
-                    backToDashboard();
+                    await formPath(toDo, backToDashboard);
                 }
                 break;
             case 'Work':
                 const validDeadline = workTypeValidation(toDo.specialInput!);
                 if(validDeadline) {
-                    await formPath(toDo);
-                    backToDashboard();
+                    await formPath(toDo, backToDashboard);
                 }
                 break;
             default:
-                await formPath(toDo);
-                console.log('DID NOT AWAIT');
-                backToDashboard();
+                await formPath(toDo, backToDashboard);
         }
     };
 

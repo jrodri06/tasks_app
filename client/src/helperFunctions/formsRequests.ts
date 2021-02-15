@@ -1,6 +1,5 @@
 import swal from 'sweetalert';
 
-/*
 const offlineService = {  
     getQueue() {
         return JSON.parse(localStorage.getItem('queue') || '[]');
@@ -18,25 +17,16 @@ const offlineService = {
         localStorage.removeItem('queue');
     }
 };
-*/
 
-/*
-const saveData = {
-    getTasksStorage() {
-        return JSON.parse(localStorage.getItem('tasks') || '[]');
-    },
-
-    updateData(data: Object) {
-        localStorage.setItem('tasks', JSON.stringify(data));
-    },
-
-    clearTasksStorage() {
-        localStorage.removeItem('tasks');
+//  When back online
+window.addEventListener('online', () => {
+    const pending = offlineService.getQueue();
+    if(pending.length > 0) {
+        pending.forEach(async (task: Object) => await submitCreateUpdateInfo('http://localhost:4001/task/new-todo', task));
+        offlineService.clearQueue();
     }
-}
-*/
+});
 
-/*
 const handleRequests = async (details: Object, url: string, requestObj: Object) => {
     if (!navigator.onLine) {
         offlineService.deferRequest(details);
@@ -45,17 +35,8 @@ const handleRequests = async (details: Object, url: string, requestObj: Object) 
         return await fetch(url, requestObj);
     }
 }
-*/
 
 const submitCreateUpdateInfo = async (url: string, data: object) => {
-    const response = await fetch(url, {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    });
-    /*
     const request = {
         method: "POST",
         headers: {
@@ -65,12 +46,10 @@ const submitCreateUpdateInfo = async (url: string, data: object) => {
     };
 
     const response = await handleRequests(data, url, request);
-    console.log('submitCreateUpdateInfo');
-    console.log(response);
-    */
 
     if(response?.status === 400 || response?.status === 404 || response?.status === 500) {
-        const message = await response.json();
+        const { message } = await response.json();
+
         throw Error(message);
     }
 
@@ -90,27 +69,31 @@ const submitEraseInfo = async (url: string, data: object) => {
     return response;
 };
 
-export const formPath = (userData: object) => {
+export const formPath = (userData: object, cb: Function) => {
     submitCreateUpdateInfo(`http://localhost:4001/task/new-todo`, userData)
-        .then((data) => {
-            if(data) {
-                console.log('The DATA');
-                console.log(data);
-                return data.json()
+        .then(data => {
+            if(Object.keys(data).length > 0) {
+                // retrieved from local storage due to user being offline
+                return { message: `Your task "${data[data.length - 1].name}" will be added to the database once you're back online` };
+            } else {
+                return data.json();
             }
         })
         .then(res => {
             if(res.message) {
                 swal('Horray!', res.message, 'success');
             }
+
+            console.log('Callback');
+            cb();
         }) 
-        .catch(err => swal('Could not submit!', `An issue ocurred: ${err}`, 'error'));
+        .catch(err => swal('Could not submit!', `${err}`, 'error'));
 };
 
-export const collectToDos = async () => {
+export const collectToDos = async (cb: Function) => {
     const response = await fetch('http://localhost:4001/task/all-tasks');
     const data = await response.json();
-    return data;
+    cb(data);
 };
 
 export const eraseTask = async (id: string) => {
