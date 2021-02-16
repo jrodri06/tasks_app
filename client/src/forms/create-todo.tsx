@@ -97,7 +97,7 @@ const CreateToDo = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form className="create-add" onSubmit={handleSubmit}>
             <span className="exit" onClick={backToDashboard}>{'\u2716'}</span>
             <h1>Create a Task</h1>
             <label>

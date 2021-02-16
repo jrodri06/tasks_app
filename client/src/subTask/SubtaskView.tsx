@@ -30,7 +30,7 @@ const SubtaskView: FunctionComponent<SubtaskViewProps> = ({
         <div className="subTasks">
             <input type="checkbox" defaultChecked={done} onChange={handleChange} />
             <div className={concluded ? "subTasks-name concluded" : "subTasks-name"}>{name}</div>
-            { price !== null && <span className={concluded ? "subTasks-name concluded" : "subTasks-name"}>{price}kr</span> }
+            { price !== null && <span className={concluded ? "subTasks-price concluded" : "subTasks-price"}>{price}kr</span> }
         </div>
     )
 }

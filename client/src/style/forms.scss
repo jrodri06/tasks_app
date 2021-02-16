@@ -8,6 +8,9 @@ $inputPadding: 10px;
 
 form {
     @include flexColumn();
+    padding: 0 10px;
+    background-color: #fff;
+    border-radius: 5px;
 
     h1 {
         text-align: center;
@@ -22,7 +25,16 @@ form {
             margin: $inputMargin;
             border-radius: $radius;
             border: 1px;
-            background-color: #fff;
+            background-color: #eee;
+        }
+    }
+
+    .required-subtask {
+        flex-direction: row;
+        align-items: center;
+
+        input  {
+            margin: 10px 20px;
         }
     }
 
@@ -31,10 +43,6 @@ form {
         margin: 0;
         width: 100%;
         border: 0;
-
-        input {
-            background-color: #fff;
-        }
 
         input[type="date"] {
             width: 97%;
@@ -45,6 +53,7 @@ form {
         padding: $inputPadding;
         margin: $inputMargin;
         border-radius: $radius;
+        background-color: #eee;
         border: 1px;
     }
 
@@ -53,6 +62,7 @@ form {
         color: #fff;
         border-radius: $radius;
         border: 1px;
+        margin: 30px 0;
     }
 
     .exit {
@@ -60,9 +70,23 @@ form {
         cursor: pointer;
         position: absolute;
         right: 10px;
+        top: 5px;
     }
 }
 
+.create-add {
+    position: relative;
+    max-width: 600px;
+    margin: auto;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
 form[name="task-erasure"] {
-    margin-top: 20px;
+    margin: 2px 0;
+    padding: 0;
+
+    input {
+        margin: 0;
+    }
 }

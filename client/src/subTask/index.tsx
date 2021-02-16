@@ -27,12 +27,10 @@ const Subtask: FunctionComponent<SubtaskProps> = ({
         <div className="subtasks-area">
             { subTaskTotalPrice > 0 && 
                 <div className="subtask-total-price">
-                    <span>Subtasks Total: {subTaskTotalPrice}kr</span>
+                    <span>Total: {subTaskTotalPrice}kr</span>
                 </div> 
             }
             
-            <h2>Subtasks</h2>
-
             {
                 subtasks.map((elements: {
                     done: boolean

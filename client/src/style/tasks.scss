@@ -1,3 +1,4 @@
+$marginBlock: 15px 0 10px;
 
 .todo-task {
     background-color: #fff;
@@ -5,17 +6,26 @@
     padding: $allPadding;
     min-width: 250px;
     margin: 10px;
+    height: fit-content;
 
-    .todo-name {
+    .todo-header {
         display: flex;
         font-size: 1.2rem;
-        justify-content: space-between;
+        justify-content: space-between;    
         
-        input {
-            height: 17px;
-            width: 30px;
+        .todo-name {
+            align-items: center;
+            display: flex;
+            font-weight: 700;
+            color: #595959;
+            
+            input {
+                height: 17px;
+                width: 30px;
+                margin: 0;
+            }
         }
-
+        
         .todo-price {
             text-decoration: underline;
             margin: 0 10px;
@@ -30,6 +40,19 @@
 
     .todo-special {
         background-color: #f9f6e8;
+        margin: $marginBlock;
+        padding: $allPadding;
+        border-radius: $radius;
+        display: flex;
+        flex-direction: column;
+
+        div {
+            padding: 5px;
+
+            span {
+                font-weight: 700;
+            }
+        }
     }
 
     .Other {
@@ -52,7 +75,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin: $marginElements;
+        margin: $marginBlock;
 
         select {
             padding: 3px;
@@ -60,6 +83,7 @@
     }
 
     form[name="task-erasure"] {
+
         input {
             color: #b13046;
             border-radius: $radius;

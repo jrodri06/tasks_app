@@ -1,29 +1,40 @@
-$radius: 10px;
-$allPadding: 10px;
+$radius: 5px;
+$allPadding: 15px 10px;
 $marginElements: 10px 0;
 
 body {
     font-family: Arial, Helvetica, sans-serif;
-    background-color: #d2d6db;
+    background-color: #eeeeee;
 
-    header {
-        h1 {
-            text-align: center
+    .App {
+        height: 100vh;
+
+        header {
+            h1 {
+                text-align: center
+            }
+    
+            button {
+                padding: 10px;
+                border-radius: $radius;
+                margin: 10px;
+                background-color: #fff;
+                border: 0px;
+                font-size: 1rem;
+                position: absolute;
+                right: 10px;
+                top: 10px;
+                cursor: pointer;
+            }
         }
-
-        button {
-            padding: $allPadding;
-            border-radius: $radius;
-            margin: 10px;
-            background-color: #fff;
-            border: 0px;
-            font-size: 1rem;
-            position: absolute;
-            right: 10px;
-            top: 10px;
-            cursor: pointer;
+    
+        .all-tasks {
+            display: flex;
+            justify-content: space-around;
+            flex-flow: wrap;
         }
     }
+
 }
 
 @import './forms.scss';

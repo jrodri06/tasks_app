@@ -48,13 +48,9 @@ const AddSubtask = () => {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form className="create-add" onSubmit={handleSubmit}>
             <span className="exit" onClick={backToDashboard}>{'\u2716'}</span>
             <h1>Add a Subtask</h1>
-            <label>
-                Required
-                <input type="checkbox" name="subTaskRequired" onChange={handleChange} />
-            </label>
 
             <label>
                 Name
@@ -63,7 +59,12 @@ const AddSubtask = () => {
 
             <label>
                 Price (optional)
-                <input type="number" name="subTaskPrice" placeholder="value in SEK" onChange={handleChange} />
+                <input type="number" name="subTaskPrice" placeholder="Value in SEK" onChange={handleChange} />
+            </label>
+
+            <label className="required-subtask">
+                Required
+                <input type="checkbox" name="subTaskRequired" onChange={handleChange} />
             </label>
 
             <input className="btn" type="submit" value="Add" />

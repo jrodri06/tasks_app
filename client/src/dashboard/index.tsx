@@ -9,8 +9,12 @@ const Dashboard = () => {
     const [childUpdate, setChildUpdate] = useState({});
 
     useEffect(() => {
+        console.log('use effect');
         collectToDos((allTodos: any) => setData(allTodos));
     }, [childUpdate]);
+
+    console.log('Dashboard');
+    console.log(data);
 
     const history = useHistory();
 

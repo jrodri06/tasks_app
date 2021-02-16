@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
 
 import Subtask from '../subTask';
-import SpecialInput from '../specialInput';
+import SpecialInput from './specialInput';
 import { eraseTask, updateDoneStatus, getPricesTotal } from '../helperFunctions/formsRequests';
 
 type ToDoProps = { 
@@ -68,7 +68,7 @@ const ToDo: FunctionComponent<ToDoProps> = ({
                     icon: 'success',
                 });
             } else {
-                swal('Your imaginary file is safe!');
+                swal('Your task is safe!');
             }
         });
     }
@@ -93,8 +93,8 @@ const ToDo: FunctionComponent<ToDoProps> = ({
 
     return (
         <div className={"todo-task" }>
-            <div className="todo-name">
-                <div>
+            <div className="todo-header">
+                <div className="todo-name">
                     <input type="checkbox" onChange={updateTask} checked={done} />
                     { name }
                 </div>
@@ -117,11 +117,11 @@ const ToDo: FunctionComponent<ToDoProps> = ({
             }
 
             <div className="todo-subtasks">
+                <span onClick={handleRedirect}>{'\u002B'} Add a subtask</span> 
                 { subtask.length > 0 && <Subtask 
                     subtasks={subtask} 
                     subTaskTotalPrice={subTaskTotalPrice}
                 /> }
-                <span onClick={handleRedirect}>{'\u002B'} Add a subtask</span> 
             </div>
 
             <form name="task-erasure" onSubmit={handleSubmit}>

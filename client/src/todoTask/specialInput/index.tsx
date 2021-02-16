@@ -10,35 +10,41 @@ type SpecialInputProp = {
 }
 
 const SpecialInput: FunctionComponent<SpecialInputProp> = ({ inputs }) => {
-    console.log('Special Elements');
-
     let toRender = ''
-    
+
     const renderInputs = () => {
         for(let element in inputs) {
             switch(element) {
                 case 'workDeadline':
                     toRender = toRender + `
-                        <span className="special-input-title">Dead Line: </span>
-                        <span className="special-input-title">${inputs[element]}</span>
+                        <div className="special-input">
+                            <span className="special-input-title">Dead Line: </span>
+                            ${inputs[element]}
+                        </div>
                     `;
                     break;
                 case 'fooCarbs':
                     toRender = toRender + `
-                        <span className="special-input-title">Carbohydrates: </span>
-                        <span className="special-input-title">${inputs[element]}</span>
+                        <div className="special-input">
+                            <span className="special-input-title">Carbohydrates: </span>
+                            ${inputs[element]}
+                        </div> 
                     `;
                     break;
                 case 'foodFat':
                     toRender = toRender + `
-                        <span className="special-input-title">Fat: </span>
-                        <span className="special-input-title">${inputs[element]}</span>
+                        <div className="special-input">
+                            <span className="special-input-title">Fat: </span>
+                            ${inputs[element]}
+                        </div>
                     `;
                     break;
                 case 'foodProtein':
                     toRender = toRender + `
-                        <span className="special-input-title">Protein: </span>
-                        <span className="special-input-title">${inputs[element]}</span>
+                        <div className="special-input">
+                            <span className="special-input-title">Protein: </span>
+                            ${inputs[element]}
+                        </div>
                     `;
                     break;
                 default:
