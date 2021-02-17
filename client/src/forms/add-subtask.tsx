@@ -1,7 +1,7 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
-import { createSubTask } from '../helperFunctions/formsRequests';
+import { createSubTask } from '../helperFunctions/requestsHandlers';
 
 interface ParamTypes {
     parentId: string
@@ -18,6 +18,11 @@ const AddSubtask = () => {
         done: false
     });
 
+    const history = useHistory();
+    const backToDashboard = () =>{
+        history.push('/');
+    };
+
     const handleChange = (userInput: ChangeEvent) => {
         const inputInfo = userInput.target as HTMLInputElement;
         switch(inputInfo.name) {
@@ -33,19 +38,13 @@ const AddSubtask = () => {
             default:
                 return;
         }
-    }
+    };
 
-    const history = useHistory();
-
-    const backToDashboard = () =>{
-        history.push('/');
-    }
-
-    const handleSubmit = async (e: FormEvent) => {
+    const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
-        await createSubTask(subTask);
+        createSubTask(subTask);
         backToDashboard();
-    }
+    };
 
     return (
         <form className="create-add" onSubmit={handleSubmit}>

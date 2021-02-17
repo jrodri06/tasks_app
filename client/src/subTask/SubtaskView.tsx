@@ -2,7 +2,7 @@ import { FunctionComponent, useState } from 'react';
 
 type SubtaskViewProps = {
     done: boolean
-    id:  String
+    id:  string
     name: String
     price: Number
     update: React.Dispatch<React.SetStateAction<{}>>
@@ -24,15 +24,29 @@ const SubtaskView: FunctionComponent<SubtaskViewProps> = ({
         });
 
         setConcluded(e.target.checked);
-    }
+    };
+
+    const dragStart = (e: any) => {
+        const target = e.target!;
+        e.dataTransfer.setData('subtask_id', target.id );
+    };
+
+    const dragOver = (e: any) => {
+        e.stopPropagation();
+    };
 
     return (
-        <div className="subTasks">
+        <div id={id}
+            className="subTasks"
+            draggable
+            onDragStart={dragStart} 
+            onDragOver={dragOver}
+        >
             <input type="checkbox" defaultChecked={done} onChange={handleChange} />
             <div className={concluded ? "subTasks-name concluded" : "subTasks-name"}>{name}</div>
             { price !== null && <span className={concluded ? "subTasks-price concluded" : "subTasks-price"}>{price}kr</span> }
         </div>
-    )
-}
+    );
+};
 
 export default SubtaskView;

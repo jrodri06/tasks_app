@@ -13,6 +13,44 @@ body {
             h1 {
                 text-align: center
             }
+
+            .filter-display {
+                position: absolute;
+                left: 10px;
+                top: 10px;
+
+                .filterDropbtn {
+                    left: 0;
+                    top: 0;
+                    cursor: pointer;
+                    color: #4caf50;
+                    font-weight: bold;
+                    z-index: 10;
+                }
+
+                .dropdown-content {
+                    display: none;
+                    flex-direction: column;
+                    position: relative;
+                    top: 50px;
+                    left: 10px;
+                    background-color: #fff;
+                    
+                    span {
+                        cursor: pointer;
+                        padding: 10px;
+
+                        &:hover {
+                            background-color: #d4d4d4;
+                        }
+                    }
+                }
+
+                .show-filter-options {
+                    display: flex;
+                }
+            }
+
     
             button {
                 padding: 10px;
@@ -25,6 +63,9 @@ body {
                 right: 10px;
                 top: 10px;
                 cursor: pointer;
+                font-weight: bold;
+                color: #595959;
+                border: 1px solid;
             }
         }
     

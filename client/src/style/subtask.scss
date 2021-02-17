@@ -17,9 +17,12 @@
             margin: 5px 0;
             padding: 5px;
             align-items: baseline;
+            cursor: pointer;
 
             span {
                 display: inline-block;
+                font-weight: bold;
+                margin: 0 10px;
             }
 
             .subTasks-price {
@@ -36,7 +39,7 @@
         }
     }
 
-    span {
+    .add-subtask {
         padding: 10px 0;
         margin: 0 10px;
         font-weight: bold;

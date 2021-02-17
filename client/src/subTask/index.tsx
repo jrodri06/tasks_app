@@ -1,7 +1,7 @@
 import { FunctionComponent, useState } from 'react';
 
 import SubtaskView from './SubtaskView';
-import { updateSubTaskDone } from '../helperFunctions/formsRequests';
+import { updateSubTaskDone } from '../helperFunctions/requestsHandlers';
 
 type SubtaskProps = {
     subtasks: []
@@ -17,14 +17,18 @@ const Subtask: FunctionComponent<SubtaskProps> = ({
     const updateSubtask = async () => {
         await updateSubTaskDone(done);
         setDone({});
-    }
+    };
+
+    const dragOver = (e: any) => {
+        e.preventDefault();
+    };
 
     if(Object.keys(done).length > 0) {
         updateSubtask();
-    }
+    };
 
     return (
-        <div className="subtasks-area">
+        <div className="subtasks-area" onDragOver={dragOver}>
             { subTaskTotalPrice > 0 && 
                 <div className="subtask-total-price">
                     <span>Total: {subTaskTotalPrice}kr</span>

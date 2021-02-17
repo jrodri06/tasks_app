@@ -4,16 +4,17 @@ import swal from 'sweetalert';
 
 import Subtask from '../subTask';
 import SpecialInput from './specialInput';
-import { eraseTask, updateDoneStatus, getPricesTotal } from '../helperFunctions/formsRequests';
+import { eraseTask, updateDoneStatus, getPricesTotal } from '../helperFunctions/requestsHandlers';
 
 type ToDoProps = { 
-    id: string,
-    name: String,
-    done: boolean,
-    description: String,
-    type: String,
-    specialInput: Object,
-    price: Number,
+    id: string
+    name: String
+    done: boolean
+    description: String
+    type: String
+    specialInput: Object
+    displayDone?: string 
+    price: Number
     childUpdate: React.Dispatch<React.SetStateAction<object>>
     subtask: []
 }
@@ -27,6 +28,7 @@ const ToDo: FunctionComponent<ToDoProps> = ({
     specialInput,
     price,
     childUpdate,
+    displayDone,
     subtask
 }) => {
 
@@ -34,8 +36,15 @@ const ToDo: FunctionComponent<ToDoProps> = ({
 
     useEffect(() => {
         fetchPrices();
-    })
+    });
 
+    const history = useHistory();
+    const handleRedirect = () => {
+        history.push(`/add-subtask/${id}`);
+    };
+
+
+    // Subtasks total
     const fetchPrices = async () => {
         try {
             const response = await getPricesTotal(id);
@@ -44,9 +53,34 @@ const ToDo: FunctionComponent<ToDoProps> = ({
         } catch(err) {
             console.error('Could not fetch subtasks total price');
         }
-    }
+    };
+
+    const updateTask = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const checked = e.target.checked;
+
+        // opacity animation 
+        if(e.target.parentElement?.parentElement?.parentElement?.classList.contains('todo-task')){
+            e.target.parentElement?.parentElement?.parentElement?.classList.add('hide-todo');
+        }
+
+        // Update when animation is concluded
+        setTimeout(async () => {
+            await updateDoneStatus({ 
+                id,
+                done: checked
+            });
     
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+            childUpdate({
+                updateType: 'Done_Status',
+                done: checked, 
+                id
+            })
+
+        }, 250)
+
+    };
+
+    const handleDeleteSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         swal({
@@ -71,31 +105,17 @@ const ToDo: FunctionComponent<ToDoProps> = ({
                 swal('Your task is safe!');
             }
         });
-    }
-
-    const updateTask = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        await updateDoneStatus({ 
-            id,
-            done: e.target.checked
-        });
-
-        childUpdate({
-            updateType: 'Done_Status',
-            done: e.target.checked, 
-            id
-        })
-    }
-
-    const history = useHistory();
-    const handleRedirect = () => {
-        history.push(`/add-subtask/${id}`);
-    }
+    };
 
     return (
-        <div className={"todo-task" }>
+        <div className={ done ? `todo-task task-concluded ${displayDone}` : "todo-task" }>
             <div className="todo-header">
                 <div className="todo-name">
-                    <input type="checkbox" onChange={updateTask} checked={done} />
+                    <input 
+                        type="checkbox" 
+                        onChange={updateTask} 
+                        checked={done} 
+                    />
                     { name }
                 </div>
                 { price !== null && <span className="todo-price">{ price }kr</span> }
@@ -107,24 +127,25 @@ const ToDo: FunctionComponent<ToDoProps> = ({
 
             <div className={`todo-type ${type}`}>
                 <span>Category</span> 
-
                 <span>{ type }</span>
             </div>
 
-            {
-                Object.keys(specialInput).length > 0 &&
-                    <SpecialInput inputs={specialInput} />
-            }
+            { Object.keys(specialInput).length > 0 && <SpecialInput inputs={specialInput} /> }
 
             <div className="todo-subtasks">
-                <span onClick={handleRedirect}>{'\u002B'} Add a subtask</span> 
+                <span 
+                    onClick={handleRedirect} 
+                    className="add-subtask"
+                >
+                    {'\u002B'} Add a subtask
+                </span> 
                 { subtask.length > 0 && <Subtask 
                     subtasks={subtask} 
                     subTaskTotalPrice={subTaskTotalPrice}
                 /> }
             </div>
 
-            <form name="task-erasure" onSubmit={handleSubmit}>
+            <form name="task-erasure" onSubmit={handleDeleteSubmit}>
                 <input type="submit" value="Delete" />
             </form>
         </div>

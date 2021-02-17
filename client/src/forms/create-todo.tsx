@@ -1,7 +1,7 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { formPath } from '../helperFunctions/formsRequests';
+import { formPath } from '../helperFunctions/requestsHandlers';
 import { foodTypeValidation, workTypeValidation, emptyFields } from '../helperFunctions/formsValidation';
 
 interface TodoProps {
@@ -27,6 +27,11 @@ const CreateToDo = () => {
         price: '',
         done: false
     });
+
+    const history = useHistory();
+    const backToDashboard = () =>{
+        history.push('/');
+    };
 
     const handleChange = (userInput: ChangeEvent) => {
         const inputInfo = userInput.target as HTMLInputElement;
@@ -63,12 +68,6 @@ const CreateToDo = () => {
             default:
                 return;
         }
-    };
-
-    const history = useHistory();
-
-    const backToDashboard = () =>{
-        history.push('/');
     };
 
     const handleSubmit = async (e: FormEvent) => {

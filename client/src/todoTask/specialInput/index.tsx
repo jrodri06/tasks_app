@@ -10,7 +10,7 @@ type SpecialInputProp = {
 }
 
 const SpecialInput: FunctionComponent<SpecialInputProp> = ({ inputs }) => {
-    let toRender = ''
+    let toRender = '';
 
     const renderInputs = () => {
         for(let element in inputs) {
@@ -51,13 +51,11 @@ const SpecialInput: FunctionComponent<SpecialInputProp> = ({ inputs }) => {
                     return toRender;
             }
         }
-    }
+    };
+
     renderInputs();
 
-    return (
-        <div className="todo-special" dangerouslySetInnerHTML={{__html: toRender }}>
-        </div>
-    )
+    return <div className="todo-special" dangerouslySetInnerHTML={{__html: toRender }} />
 }
 
 export default SpecialInput;
