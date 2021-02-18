@@ -5,11 +5,10 @@ import SubTask from '../../models/SubTask';
 const route = Router();
 
 route.post('/', async (req: Request, res: Response) => {
-    const { parentId, name, required, price, done } = req.body;
+    const { parentId, name, price, done } = req.body;
     const newSubTask = new SubTask({ 
         parentId, 
         name,
-        required,
         price,
         done 
     });

@@ -42,13 +42,14 @@ const Subtask: FunctionComponent<SubtaskProps> = ({
                     parentId: String 
                     _id: string
                     price: Number
-                }) => {
+                }, i) => {
                     return <SubtaskView 
-                        key={elements._id} 
+                        key={elements._id ? elements._id : i} 
                         id={elements._id}
                         done={elements.done} 
                         name={elements.name} 
                         price={elements.price}
+                        parentId={elements.parentId} 
                         update={setDone}
                     />
                 })

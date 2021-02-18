@@ -10,6 +10,7 @@ route.post('/', async (req: Request, res: Response) => {
 
         try {
             const { id } = req.body;
+
             await ToDo.deleteOne({ _id: id });
             await Subtask.deleteMany({ parentId: id });
 

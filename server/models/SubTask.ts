@@ -17,10 +17,6 @@ const subTask = new Schema({
         type: Number,
         required: false
     },
-    required: {
-        type: Boolean,
-        default: false
-    },
     done: {
         type: Boolean,
         default: false

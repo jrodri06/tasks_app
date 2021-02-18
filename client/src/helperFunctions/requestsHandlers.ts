@@ -1,39 +1,76 @@
 import swal from 'sweetalert';
 
-import { offlineService } from './offlineHandlers';
+import { offlineService, allQueues } from './offlineHandlers';
 import { localTasks } from './localStorageHandlers';
-
 
 // Post Requests for create, update and delete
 const handlePostWhenOffline = async (
     details: any, 
     url: string, 
-    requestObj: Object, 
-    requestType: 'erasure' | 'createUpdate'
+    requestObj: Object
 ) => {
-    if (!navigator.onLine && requestType === 'createUpdate') {
-        offlineService.deferRequest(details);
-        return offlineService.getQueue();
-    } 
-    else if(!navigator.onLine && requestType === 'erasure') {
-        offlineService.erasureQueue(details);
-        return offlineService.getQueue();
+
+    if (!navigator.onLine) {
+        const direction = url.split('/');
+
+        switch(direction[direction.length - 1]) {
+            case 'new-todo':
+                offlineService.updateQueue(allQueues.newTasksQueue, details);
+                return details;
+            case 'remove-subtask':
+                offlineService.updateQueue(allQueues.eraseSubtasksQueue, details);
+                break;
+            case 'erase-task':
+                offlineService.updateQueue(allQueues.eraseTasksQueue, details);
+                break;
+            case 'update-task':
+                offlineService.updateQueue(allQueues.updateTasksQueue, details);
+                break;
+            case 'new-subtask':
+                offlineService.updateQueue(allQueues.newSubtasksQueue, details);
+                break;
+            case 'update-subtask':
+                offlineService.updateQueue(allQueues.updateSubtasksQueue, details);
+                break;
+            default:
+                return;
+        }
+
+        return localTasks.getTasks();
     } 
     else {
         return await fetch(url, requestObj);
     }
 }
 
-export const submitCreateUpdateInfo = async (url: string, data: object, ) => {
-    const request = {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    };
+export const submitCUDInfo = async (
+    url: string, 
+    data: object, 
+    type: 'erasure' | 'createUpdate'
+) => {
 
-    const response = await handlePostWhenOffline(data, url, request, 'createUpdate');
+    let request: Object = {};
+
+    if(type === 'createUpdate') {
+        request = {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        };
+    } else if(type === 'erasure') {
+        request = {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'X-HTTP-Method-Override': 'DELETE'
+            },
+            body: JSON.stringify(data)
+        };
+    }
+
+    const response = await handlePostWhenOffline(data, url, request);
 
     if(response?.status === 400 || response?.status === 404 || response?.status === 500) {
         const { message } = await response.json();
@@ -44,26 +81,12 @@ export const submitCreateUpdateInfo = async (url: string, data: object, ) => {
     return response;
 };
 
-export const submitEraseInfo = async (url: string, data: { id: string }) => {
-    const request = {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json',
-            'X-HTTP-Method-Override': 'DELETE'
-        },
-        body: JSON.stringify(data)
-    };
-
-    const response = await handlePostWhenOffline(data, url, request, 'erasure');
-    return response;
-};
-
 export const formPath = (userData: object, cb: Function) => {
-    submitCreateUpdateInfo(`http://localhost:4001/task/new-todo`, userData)
+    submitCUDInfo(`http://localhost:4001/task/new-todo`, userData, 'createUpdate')
         .then(data => {
             if(Object.keys(data).length > 0) {
-                // retrieved from local storage due to user being offline
-                return { message: `Your task "${data[data.length - 1].name}" will be added to the database once you're back online` };
+                // Offline scenario
+                return { message: `Your task "${data.name}" will be added to the database once you're back online` };
             } else {
                 return data.json();
             }
@@ -73,101 +96,165 @@ export const formPath = (userData: object, cb: Function) => {
                 swal('Horray!', res.message, 'success');
             }
 
-            console.log('Callback');
             cb();
         }) 
         .catch(err => swal('Could not submit!', `${err}`, 'error'));
 };
 
+
+// No CUD
 export const collectToDos = async (cb: Function) => {
+    cb(localTasks.getTasks());
+
     try {
         const response = await fetch('http://localhost:4001/task/all-tasks');
         const data = await response.json();
-        
-        localTasks.makeList(data);        
-        cb(localTasks.getTasks());
+
+        if(response.status === 500 || response.status === 400 || response.status === 404){
+            throw Error(data.message);
+        } else {
+            localTasks.makeFullList(data);        
+            cb(localTasks.getTasks());
+        }
     } catch(err){
-        console.error(err.message)
+        console.log(err);
+        swal('Something went wrong', `${err.message}`, 'error');
     }
     
 };
 
-
-
+// To double check
 export const convertSubToMain = async (id: string) => {
-    const converted: any = await submitEraseInfo(`http://localhost:4001/task/remove-subtask`, { id })
-        .then(res => res.json())
-        .then(data => {
-            const { price, name, done } = data;
-            return {
-                name,
-                description: '',
-                type: 'Other',
-                specialInput: {},
-                price,
-                done
-            }
-        })
-        .catch(err => console.error(err))
+    try {
+        const converted: any = submitCUDInfo('http://localhost:4001/task/remove-subtask', { id }, 'erasure')
+            .then(res => res.json())
+            .then(data => {
+                const { price, name, done } = data;
+                return {
+                    name,
+                    description: '',
+                    type: 'Other',
+                    specialInput: {},
+                    price,
+                    done
+                }
+            })
+            .catch(err => console.error(err))
+    
+        return await submitCUDInfo(`http://localhost:4001/task/new-todo`, converted, 'createUpdate');
 
-    return await submitCreateUpdateInfo(`http://localhost:4001/task/new-todo`, converted)
-        .then(res => res.json())
-        .catch(err => console.error(err))
-}
+    } catch(err) {
+        console.error(err);
+    }
+};
+
 
 export const eraseTask = async (id: string) => {
-    await submitEraseInfo(`http://localhost:4001/task/erase-task`, { id })
-        .then(res => {
-            console.log('Task erasure');
-            console.log(res);
-        })
-        .catch(err => console.error(err))
+    localTasks.removeTaskFromList({ id });
+
+    try {
+        const response = await submitCUDInfo('http://localhost:4001/task/erase-task', { id }, 'erasure');
+        return response;
+    } catch(err) {
+        console.error(err);
+    }
+};
+
+export const updateDoneStatus = async (dataUpdated: { 
+    id: string, 
+    done: boolean 
+}) => {
+    localTasks.updateTaskFromList(dataUpdated);
+
+    try {
+        const response = await submitCUDInfo('http://localhost:4001/task/update-task', dataUpdated, 'createUpdate');
+        return response.status;
+    } catch(err) {
+        console.error(err);
+    }
 }
 
-export const updateDoneStatus = async (dataUpdated: object) => {
-    console.log(dataUpdated);
-    await submitCreateUpdateInfo(`http://localhost:4001/task/update-task`, dataUpdated)
-        .then(res => res.status)
-        .catch(err => console.error(err))
+export const createSubTask = async (subtask: { 
+    done: boolean
+    name: String
+    parentId: String
+    price: String
+}) => {
+
+    localTasks.createSubtaskToList(subtask);
+
+    try {
+        await submitCUDInfo('http://localhost:4001/task/new-subtask', subtask, 'createUpdate');
+
+        swal('Added!', `The subtask "${subtask.name}" has been added`, 'success');    
+    }  catch(err) {
+        console.error(err);
+    }
 }
 
-export const createSubTask = async (subtask: object) => {
+export const updateSubTaskDone = async (subtask: Object) => {
+    localTasks.updateSubtaskFromList(subtask);
 
-    await submitCreateUpdateInfo(`http://localhost:4001/task/new-subtask`, subtask)
-        .then(res => {
-            if(typeof res === 'object') {
-                return res.status
-            } else {
-                return {}
-            }
-        })
-        .catch(err => console.error(err))
+    try { 
+        await submitCUDInfo(`http://localhost:4001/task/update-subtask`, subtask, 'createUpdate');
+    }  catch(err) {
+        console.error(err);
+    }
 }
 
-export const updateSubTaskDone = async (subtask: object) => {
-    await submitCreateUpdateInfo(`http://localhost:4001/task/update-subtask`, subtask)
-        .then(res => {
-            if(typeof res === 'object') {
-                return res.status
-            } else {
-                return {}
-            }
-        })
-        .catch(err => console.error(err))
+export const getPricesTotal = (taskId: String) => {
+    const currentTasks = localTasks.getTasks();
+    const selectedTask = currentTasks.find((task: { _id: string }) => task._id === taskId);
+
+    let totalPrice = 0;
+
+    selectedTask.subtask.forEach((subtask: { price: string }) => {
+        if(subtask.price !== null) {
+            totalPrice = totalPrice + +subtask.price;
+        }
+    })
+
+    return totalPrice;
 }
 
-export const getPricesTotal = async (taskId: String) => {
-    return await fetch(`http://localhost:4001/task/total-price-subtasks/?task=${taskId}`)
-        .then(res => res.json())
-        .then(data => {
-            if(data.result.length === 0) {
-                return 0;
-            } else {
-                let total: Number = 0;
-                data.result.map((subtasks: { price: Number } ) => total = +total + +subtasks.price);
+export const getTask = async (taskId: String) => {
+    console.log('Fetch Get Task');
+    console.log(taskId);
 
-                return total;
-            }
-        })
-        .catch(err => console.error(err))
+    try {
+        const response = await fetch(`http://localhost:4001/edit-task/${taskId}`);
+        const data = await response.json();
+
+        if(response.status === 500 || response.status === 404 || response.status === 400) {
+            throw Error(data);
+        }
+        console.log(response);
+        console.log(data);
+
+        return data;
+    } catch(err) {
+        console.error(err);
+    }
+}
+
+
+export const editTask = async (task: Object,  cb: Function) => {
+    try {
+        const response = await fetch('http://localhost:4001/edit-task/', {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(task)
+        });
+
+        if(response.status === 500 || response.status === 404 || response.status === 400) {
+            throw Error('Could not update');
+        }
+        swal('Updated!', 'The task has been updated', 'success');
+    } catch(err) {
+        console.error(err);
+    }
+
+    cb();
 }

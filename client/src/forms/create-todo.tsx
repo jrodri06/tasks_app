@@ -35,10 +35,6 @@ const CreateToDo = () => {
 
     const handleChange = (userInput: ChangeEvent) => {
         const inputInfo = userInput.target as HTMLInputElement;
-
-        if(inputInfo.name === 'toDoType') {
-            setToDo({ ...toDo, specialInput: {} });
-        }
         
         switch(inputInfo.name) {
             case 'toDoName':
@@ -48,7 +44,8 @@ const CreateToDo = () => {
                 setToDo({ ...toDo, description: inputInfo.value });
                 break;
             case 'toDoType':
-                setToDo({ ...toDo, type: inputInfo.value });
+                const clearSpecialInput = { ...toDo, specialInput: {} };
+                setToDo({ ...clearSpecialInput, type: inputInfo.value });
                 break;
             case 'toDoPrice':
                 setToDo({ ...toDo, price: inputInfo.value });
@@ -105,7 +102,7 @@ const CreateToDo = () => {
             </label>
 
             <label>
-                Description
+                Description (optional)
                 <input type="text" name="toDoDesc" onChange={handleChange} />
             </label>
 

@@ -5,8 +5,6 @@ import ToDo from '../../../models/ToDo';
 const route = Router();
 
 route.post('/', async (req: Request, res: Response) => {
-    console.log(req.body);
-
     const { id, done } = req.body;
 
     try {

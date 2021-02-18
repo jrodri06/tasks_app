@@ -1,24 +1,32 @@
-import { localTasks } from './localStorageHandlers';
-import { submitCreateUpdateInfo, submitEraseInfo } from './requestsHandlers';
+import { submitCUDInfo } from './requestsHandlers';
 
-export const offlineService = {  
-    getQueue() {
-        return JSON.parse(localStorage.getItem('queue') || '[]');
+export const allQueues = {
+    newTasksQueue: 'newTasksQueue',
+    eraseTasksQueue: 'eraseTasksQueue',
+    updateTasksQueue: 'updateTasksQueue',
+    newSubtasksQueue: 'newSubtasksQueue',
+    eraseSubtasksQueue: 'eraseSubtasksQueue',
+    updateSubtasksQueue: 'updateSubtasksQueue'
+};
+
+export const offlineService = {
+    getQueue(queue: string) {
+        return JSON.parse(localStorage.getItem(queue) || '[]');
     },
 
-    deferRequest(payload: Object) {
-        const queue = this.getQueue();
-        queue.push(payload);
-        localStorage.setItem('queue', JSON.stringify(queue));
+    updateQueue(queue: string, payload: Object) {
+        const currentQueue = this.getQueue(queue);
+        currentQueue.push(payload);
+
+        localStorage.setItem(queue, JSON.stringify(currentQueue));
     },
 
-    clearQueue() {
-        localStorage.removeItem('queue');
+    clearQueue(queue: string) {
+        localStorage.removeItem(queue);
     },
+};
 
-    getErasureQueue() {
-        return JSON.parse(localStorage.getItem('erasureQueue') || '[]');
-    },
+/*
 
     erasureQueue(payload: { id: string }) {
         // Update Local Storage Tasks
@@ -32,23 +40,44 @@ export const offlineService = {
         localStorage.setItem('erasureQueue', JSON.stringify(erasureQueue));
     },
 
-    clearErasureQueue() {
-        localStorage.removeItem('erasureQueue');
-    }
-};
+*/
+
+
 
 //  When back online
-window.addEventListener('online', () => {
-    const pending = offlineService.getQueue();
-    const toErase = offlineService.getErasureQueue();
+window.addEventListener('online', () => clearQueues());
 
-    if(pending.length > 0) {
-        pending.forEach(async (task: Object) => await submitCreateUpdateInfo('http://localhost:4001/task/new-todo', task));
-        offlineService.clearQueue();
-    }
+const clearQueues = () => {
+    for(let queue in allQueues) {
 
-    if(toErase.length > 0) {
-        toErase.forEach(async (task: { id: string }) => await submitEraseInfo('http://localhost:4001/task/erase-task', task));
-        offlineService.clearErasureQueue();
-    }
-});
+        const pending = offlineService.getQueue(`${queue}`);
+
+        if(pending.length > 0) {
+            switch(`${queue}`){
+                case 'newTasksQueue':
+                    pending.forEach(async (task: Object) => await submitCUDInfo('http://localhost:4001/task/new-todo', task, 'createUpdate'));
+                    offlineService.clearQueue(`${queue}`);
+                    break;
+                case 'eraseTasksQueue':
+                    pending.forEach(async (task: { id: string }) => await submitCUDInfo('http://localhost:4001/task/erase-task', task, 'erasure'));
+                    offlineService.clearQueue(`${queue}`);
+                    break;
+                case 'updateTasksQueue':
+                    pending.forEach(async (task: Object) => await submitCUDInfo('http://localhost:4001/task/update-task', task, 'createUpdate'));
+                    offlineService.clearQueue(`${queue}`);
+                    break;
+                case 'newSubtasksQueue':
+                    pending.forEach(async (subtask: Object) => await submitCUDInfo('http://localhost:4001/task/new-subtask', subtask, 'createUpdate'));
+                    offlineService.clearQueue(`${queue}`);
+                    break;
+                case 'updateSubtasksQueue':
+                    pending.forEach(async (subtask: Object) => await submitCUDInfo('http://localhost:4001/task/update-subtask', subtask, 'createUpdate'));
+                    offlineService.clearQueue(`${queue}`);
+                    break;
+                default:
+                    pending.forEach(async (id: Object) => await submitCUDInfo('http://localhost:4001/task/remove-subtask', id, 'erasure'));
+                    offlineService.clearQueue(`${queue}`);
+            };
+        };
+    };
+};

@@ -1,5 +1,6 @@
-import { FunctionComponent, useEffect, useState } from 'react';
+import { FunctionComponent } from 'react';
 import { useHistory } from 'react-router-dom';
+
 import swal from 'sweetalert';
 
 import Subtask from '../subTask';
@@ -32,28 +33,14 @@ const ToDo: FunctionComponent<ToDoProps> = ({
     subtask
 }) => {
 
-    const [subTaskTotalPrice, setSubTaskTotalPrice] = useState(0)
-
-    useEffect(() => {
-        fetchPrices();
-    });
-
     const history = useHistory();
     const handleRedirect = () => {
         history.push(`/add-subtask/${id}`);
     };
 
-
-    // Subtasks total
-    const fetchPrices = async () => {
-        try {
-            const response = await getPricesTotal(id);
-            const result = +response;
-            setSubTaskTotalPrice(result);
-        } catch(err) {
-            console.error('Could not fetch subtasks total price');
-        }
-    };
+    const editPage = () => {
+        history.push(`/edit-task/${id}`);
+    }
 
     const updateTask = (e: React.ChangeEvent<HTMLInputElement>) => {
         const checked = e.target.checked;
@@ -121,9 +108,9 @@ const ToDo: FunctionComponent<ToDoProps> = ({
                 { price !== null && <span className="todo-price">{ price }kr</span> }
             </div>
 
-            <div className="todo-description">
+            <h3 className="todo-description">
                 { description }
-            </div>
+            </h3>
 
             <div className={`todo-type ${type}`}>
                 <span>Category</span> 
@@ -141,9 +128,11 @@ const ToDo: FunctionComponent<ToDoProps> = ({
                 </span> 
                 { subtask.length > 0 && <Subtask 
                     subtasks={subtask} 
-                    subTaskTotalPrice={subTaskTotalPrice}
+                    subTaskTotalPrice={getPricesTotal(id)}
                 /> }
             </div>
+
+            <button className="edit-btn" onClick={editPage}>Edit</button>
 
             <form name="task-erasure" onSubmit={handleDeleteSubmit}>
                 <input type="submit" value="Delete" />

@@ -11,7 +11,8 @@ $marginBlock: 15px 0 10px;
     .todo-header {
         display: flex;
         font-size: 1.2rem;
-        justify-content: space-between;    
+        justify-content: space-between;  
+        padding: 0 0 10px;  
         
         .todo-name {
             align-items: center;
@@ -28,14 +29,14 @@ $marginBlock: 15px 0 10px;
         
         .todo-price {
             text-decoration: underline;
-            margin: 0 10px;
+            margin: 0 5px;
         }
     }
 
     .todo-description {
-        text-decoration: underline;
         text-align: center;
         margin: $marginElements;
+        font-size: 1rem;
     }
 
     .todo-special {
@@ -80,6 +81,17 @@ $marginBlock: 15px 0 10px;
         select {
             padding: 3px;
         }
+    }
+
+    .edit-btn {
+        color: #fff;
+        border-radius: 5px;
+        background-color: #308db1;
+        border: 0px;
+        font-size: 1rem;
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
     }
 
     form[name="task-erasure"] {

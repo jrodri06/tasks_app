@@ -13,7 +13,6 @@ const AddSubtask = () => {
     const [subTask, setSubTask] = useState({
         parentId,
         name: '',
-        required: false,
         price: '',
         done: false
     });
@@ -28,9 +27,6 @@ const AddSubtask = () => {
         switch(inputInfo.name) {
             case 'subTaskName':
                 setSubTask({ ...subTask, name: inputInfo.value });
-                break;
-            case 'subTaskRequired':
-                setSubTask({ ...subTask, required: inputInfo.checked });
                 break;
             case 'subTaskPrice':
                 setSubTask({ ...subTask, price: inputInfo.value });
@@ -59,11 +55,6 @@ const AddSubtask = () => {
             <label>
                 Price (optional)
                 <input type="number" name="subTaskPrice" placeholder="Value in SEK" onChange={handleChange} />
-            </label>
-
-            <label className="required-subtask">
-                Required
-                <input type="checkbox" name="subTaskRequired" onChange={handleChange} />
             </label>
 
             <input className="btn" type="submit" value="Add" />

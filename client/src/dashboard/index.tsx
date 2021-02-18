@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import swal from 'sweetalert';
 
 import ToDo from '../todoTask';
 import { collectToDos, convertSubToMain } from '../helperFunctions/requestsHandlers';
@@ -43,12 +42,12 @@ const Dashboard = () => {
         e.preventDefault();
     }
 
-
     // Filter functions
     const filterDahsboard = (displayDone: boolean) => {
         setDisplayDoneTasks(displayDone)
     }
 
+    console.log('Dahsboard');
     const tasksDone = () => {
         const done = data.filter(
             (todo: { 
@@ -64,7 +63,7 @@ const Dashboard = () => {
         );
 
         if(done.length === 0) {
-            return swal('Nothing to show', 'It seems you have not marked any tasks as done yet', 'error');
+            return <div className="no-done-tasks">Nothing to see here {'😳'}</div>
         } else {
             return done.map(
                 (todo: { 
@@ -107,14 +106,27 @@ const Dashboard = () => {
                     </button>
 
                     <div className={showFilterOptions ? "dropdown-content show-filter-options" : "dropdown-content"}>
-                        <span onClick={ () => filterDahsboard(true) }>Done {displayDoneTasks && '\u2713'}</span>
-                        <span onClick={ () => filterDahsboard(false) }>To Do {!displayDoneTasks && '\u2713'}</span>
+                        <span onClick={ () => {
+                                filterDahsboard(true);
+                                setShowFilterOptions(!showFilterOptions);
+                            }
+                        }>
+                            Done {displayDoneTasks && '\u2713'}
+                        </span>
+
+                        <span onClick={ () => {
+                                filterDahsboard(false);
+                                setShowFilterOptions(!showFilterOptions);
+                            }
+                        }>
+                            To Do {!displayDoneTasks && '\u2713'}
+                        </span>
                     </div>
                 </div>
 
                 <h1>Dashboard</h1>
 
-                <button onClick={changeRoute}>Add Task</button>
+                <button className="addTaskbtn" onClick={changeRoute}>Add Task</button>
             </header>
 
             <div className="all-tasks">

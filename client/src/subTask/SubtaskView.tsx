@@ -5,6 +5,7 @@ type SubtaskViewProps = {
     id:  string
     name: String
     price: Number
+    parentId: String
     update: React.Dispatch<React.SetStateAction<{}>>
 }
 
@@ -13,6 +14,7 @@ const SubtaskView: FunctionComponent<SubtaskViewProps> = ({
     id,
     name,
     price,
+    parentId,
     update
 }) => {
     const [concluded, setConcluded] = useState(done);
@@ -20,7 +22,8 @@ const SubtaskView: FunctionComponent<SubtaskViewProps> = ({
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         await update({
             taskId: id,
-            done: e.target.checked
+            done: e.target.checked,
+            parentId
         });
 
         setConcluded(e.target.checked);
@@ -42,8 +45,10 @@ const SubtaskView: FunctionComponent<SubtaskViewProps> = ({
             onDragStart={dragStart} 
             onDragOver={dragOver}
         >
-            <input type="checkbox" defaultChecked={done} onChange={handleChange} />
-            <div className={concluded ? "subTasks-name concluded" : "subTasks-name"}>{name}</div>
+            <div>
+                <input type="checkbox" defaultChecked={done} onChange={handleChange} />
+                <span className={concluded ? "subTasks-name concluded" : "subTasks-name"}>{name}</span>
+            </div>
             { price !== null && <span className={concluded ? "subTasks-price concluded" : "subTasks-price"}>{price}kr</span> }
         </div>
     );
