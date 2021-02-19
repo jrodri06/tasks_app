@@ -37,7 +37,7 @@ app.use(routes);
 
 app.listen(4001, () => console.log(`Server is running on port 4001`));
 
-export = (event: any, context: any) => {
+const handler = (event: any, context: any) => {
     context.callbackWaitsForEmptyEventLoop = false;
 
     connect()
@@ -46,3 +46,5 @@ export = (event: any, context: any) => {
             throw Error(`This is what you got ${err}`)
         });
 }
+
+module.exports.handler = handler;
