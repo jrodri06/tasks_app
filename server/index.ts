@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import { config } from 'dotenv';
 import mongoose from 'mongoose';
 import methodOverride from 'method-override';
-// import serverless from 'serverless-http';
+import serverless from 'serverless-http';
 
 import routes from './routes';
 
@@ -33,4 +33,4 @@ app.use(routes);
 
 app.listen(4001, () => console.log(`Server is running on port 4001`));
 
-// export default serverless(app);
+module.exports.handler = serverless(app);
