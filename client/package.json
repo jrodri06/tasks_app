@@ -1,6 +1,7 @@
 {
-  "name": "my-app",
+  "name": "client",
   "version": "0.1.0",
+  "description": "To Do Dashboard",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
