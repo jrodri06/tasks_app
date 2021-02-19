@@ -37,7 +37,7 @@ app.use(routes);
 
 app.listen(4001, () => console.log(`Server is running on port 4001`));
 
-export default (event: any, context: any) => {
+export = (event: any, context: any) => {
     context.callbackWaitsForEmptyEventLoop = false;
 
     connect()
