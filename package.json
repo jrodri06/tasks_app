@@ -4,7 +4,7 @@
   "description": "Todo list App",
   "main": "index.js",
   "scripts": {
-    "build": "(cd client && npm install && npm run-script build) && (cd server && npm install)",
+    "build": "(cd client && npm install && npm run-script build) && (cd server && npm install && tsc)",
     "start": "cd server && npm start"
   },
   "repository": {
