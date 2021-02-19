@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
+const path_1 = __importDefault(require("path"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const dotenv_1 = require("dotenv");
 const mongoose_1 = __importDefault(require("mongoose"));
@@ -12,6 +13,8 @@ const method_override_1 = __importDefault(require("method-override"));
 const routes_1 = __importDefault(require("./routes"));
 dotenv_1.config();
 const app = express_1.default();
+const buildPath = path_1.default.join(__dirname, '../client', 'build');
+app.use(express_1.default.static(buildPath));
 app.use(cors_1.default({
     "origin": "*",
     "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
@@ -28,4 +31,7 @@ mongoose_1.default.connect(process.env.DB_CONNECT, {
     .then(() => console.log('Connected to db!'))
     .catch(err => console.log(`Error occurred! ${err.message}`));
 app.use(routes_1.default);
-app.listen(4001, () => console.log(`Server is running on port 4001`));
+app.get('*', (req, res) => {
+    res.sendFile(path_1.default.join(__dirname + '/../client/build/index.html'));
+});
+app.listen(process.env.PORT || 4001, () => console.log(`Server is running on port 4001`));
