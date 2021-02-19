@@ -107,7 +107,7 @@ export const collectToDos = async (cb: Function) => {
     cb(localTasks.getTasks());
 
     try {
-        const response = await fetch('https://jjnr-todo-list.netlify.app/:4001/task/all-tasks');
+        const response = await fetch('/task/all-tasks');
         const data = await response.json();
 
         if(response.status === 500 || response.status === 400 || response.status === 404){
