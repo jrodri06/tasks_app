@@ -9,7 +9,6 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const dotenv_1 = require("dotenv");
 const mongoose_1 = __importDefault(require("mongoose"));
 const method_override_1 = __importDefault(require("method-override"));
-const serverless_http_1 = __importDefault(require("serverless-http"));
 const routes_1 = __importDefault(require("./routes"));
 dotenv_1.config();
 const app = express_1.default();
@@ -31,4 +30,3 @@ mongoose_1.default.connect(process.env.DB_CONNECT, {
 app.use(routes_1.default);
 // app.use('/.netlify/functions/', routes);
 app.listen(4001, () => console.log(`Server is running on port 4001`));
-module.exports.handler = serverless_http_1.default(app);
