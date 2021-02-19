@@ -27,7 +27,7 @@ route.get('/', async (req: Request, res: Response) => {
             }
     
             position++;
-        }
+        };
         
         const final = allData.map((task, i) => {
             const match = subTasks.find(subtask => subtask.position === i);
@@ -41,8 +41,8 @@ route.get('/', async (req: Request, res: Response) => {
                 }
             }
     
-        })
-        
+        });
+
         res.status(200).send(final);
     }
     catch(err) {

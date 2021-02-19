@@ -82,7 +82,7 @@ export const submitCUDInfo = async (
 };
 
 export const formPath = (userData: object, cb: Function) => {
-    submitCUDInfo(`https://jjnr-todo-list.netlify.app/:4001/task/new-todo`, userData, 'createUpdate')
+    submitCUDInfo(`/task/new-todo`, userData, 'createUpdate')
         .then(data => {
             if(Object.keys(data).length > 0) {
                 // Offline scenario
