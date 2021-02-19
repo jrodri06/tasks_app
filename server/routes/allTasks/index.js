@@ -37,6 +37,7 @@ route.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             }
             position++;
         }
+        ;
         const final = allData.map((task, i) => {
             const match = subTasks.find(subtask => subtask.position === i);
             if (match === undefined) {
