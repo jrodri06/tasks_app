@@ -4,7 +4,7 @@
   "description": "To Do Dashboard",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "tsc && node index.js",
     "dev": "nodemon index.ts"
   },
   "dependencies": {
