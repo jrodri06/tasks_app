@@ -12,9 +12,5 @@
     "url": "git+https://github.com/jrodri06/tasks_app.git"
   },
   "author": "Jose Rodrigues (JJNR)",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/jrodri06/tasks_app/issues"
-  },
-  "homepage": "https://github.com/jrodri06/tasks_app#readme"
+  "license": "ISC"
 }
