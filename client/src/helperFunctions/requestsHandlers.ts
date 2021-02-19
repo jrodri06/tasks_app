@@ -82,7 +82,7 @@ export const submitCUDInfo = async (
 };
 
 export const formPath = (userData: object, cb: Function) => {
-    submitCUDInfo(`http://localhost:4001/task/new-todo`, userData, 'createUpdate')
+    submitCUDInfo(`https://jjnr-todo-list.netlify.app/:4001/task/new-todo`, userData, 'createUpdate')
         .then(data => {
             if(Object.keys(data).length > 0) {
                 // Offline scenario
@@ -107,7 +107,7 @@ export const collectToDos = async (cb: Function) => {
     cb(localTasks.getTasks());
 
     try {
-        const response = await fetch('http://localhost:4001/task/all-tasks');
+        const response = await fetch('https://jjnr-todo-list.netlify.app/:4001/task/all-tasks');
         const data = await response.json();
 
         if(response.status === 500 || response.status === 400 || response.status === 404){
@@ -126,7 +126,7 @@ export const collectToDos = async (cb: Function) => {
 // To double check
 export const convertSubToMain = async (id: string) => {
     try {
-        const converted: any = submitCUDInfo('http://localhost:4001/task/remove-subtask', { id }, 'erasure')
+        const converted: any = submitCUDInfo('https://jjnr-todo-list.netlify.app/:4001/task/remove-subtask', { id }, 'erasure')
             .then(res => res.json())
             .then(data => {
                 const { price, name, done } = data;
@@ -141,7 +141,7 @@ export const convertSubToMain = async (id: string) => {
             })
             .catch(err => console.error(err))
     
-        return await submitCUDInfo(`http://localhost:4001/task/new-todo`, converted, 'createUpdate');
+        return await submitCUDInfo(`https://jjnr-todo-list.netlify.app/:4001/task/new-todo`, converted, 'createUpdate');
 
     } catch(err) {
         console.error(err);
@@ -153,7 +153,7 @@ export const eraseTask = async (id: string) => {
     localTasks.removeTaskFromList({ id });
 
     try {
-        const response = await submitCUDInfo('http://localhost:4001/task/erase-task', { id }, 'erasure');
+        const response = await submitCUDInfo('https://jjnr-todo-list.netlify.app/:4001/task/erase-task', { id }, 'erasure');
         return response;
     } catch(err) {
         console.error(err);
@@ -167,7 +167,7 @@ export const updateDoneStatus = async (dataUpdated: {
     localTasks.updateTaskFromList(dataUpdated);
 
     try {
-        const response = await submitCUDInfo('http://localhost:4001/task/update-task', dataUpdated, 'createUpdate');
+        const response = await submitCUDInfo('https://jjnr-todo-list.netlify.app/:4001/task/update-task', dataUpdated, 'createUpdate');
         return response.status;
     } catch(err) {
         console.error(err);
@@ -184,7 +184,7 @@ export const createSubTask = async (subtask: {
     localTasks.createSubtaskToList(subtask);
 
     try {
-        await submitCUDInfo('http://localhost:4001/task/new-subtask', subtask, 'createUpdate');
+        await submitCUDInfo('https://jjnr-todo-list.netlify.app/:4001/task/new-subtask', subtask, 'createUpdate');
 
         swal('Added!', `The subtask "${subtask.name}" has been added`, 'success');    
     }  catch(err) {
@@ -196,7 +196,7 @@ export const updateSubTaskDone = async (subtask: Object) => {
     localTasks.updateSubtaskFromList(subtask);
 
     try { 
-        await submitCUDInfo(`http://localhost:4001/task/update-subtask`, subtask, 'createUpdate');
+        await submitCUDInfo(`https://jjnr-todo-list.netlify.app/:4001/task/update-subtask`, subtask, 'createUpdate');
     }  catch(err) {
         console.error(err);
     }
@@ -222,7 +222,7 @@ export const getTask = async (taskId: String) => {
     console.log(taskId);
 
     try {
-        const response = await fetch(`http://localhost:4001/edit-task/${taskId}`);
+        const response = await fetch(`https://jjnr-todo-list.netlify.app/:4001/edit-task/${taskId}`);
         const data = await response.json();
 
         if(response.status === 500 || response.status === 404 || response.status === 400) {
@@ -240,7 +240,7 @@ export const getTask = async (taskId: String) => {
 
 export const editTask = async (task: Object,  cb: Function) => {
     try {
-        const response = await fetch('http://localhost:4001/edit-task/', {
+        const response = await fetch('https://jjnr-todo-list.netlify.app/:4001/edit-task/', {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
