@@ -43,7 +43,7 @@ route.get('/', async (req: Request, res: Response) => {
     
         });
 
-        res.status(200).send(final);
+        res.cookie('name', 'express').status(200).send(final);
     }
     catch(err) {
         res.status(500).json({ message: `A problem occured: ${err.message}` });

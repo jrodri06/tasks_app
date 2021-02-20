@@ -3,13 +3,7 @@ import swal from 'sweetalert';
 import { offlineService, allQueues } from './offlineHandlers';
 import { localTasks } from './localStorageHandlers';
 
-console.log(process.env.NODE_ENV);
-console.log(process.env.NODE_ENV === 'development');
-
 const localHost = process.env.NODE_ENV === 'development' ? 'http://localhost:4001' : '';
-
-console.log('Local Host var');
-console.log(localHost);
 
 // Post Requests for create, update and delete
 const handlePostWhenOffline = async (
