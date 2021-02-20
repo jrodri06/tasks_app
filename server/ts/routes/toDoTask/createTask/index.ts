@@ -5,10 +5,12 @@ import ToDo from '../../../models/ToDo';
 const route = Router();
 
 route.post('/', async (req: Request, res: Response) => {
-    console.log(req.body);
+    const userCookie = req.cookies.tasksListUbi;
 
     const { name, description, type, price, specialInput } = req.body;
     const newTodo = new ToDo({
+        userCookie,
+        lastUpdatedBy: userCookie,
         name, 
         description, 
         type, 

@@ -6,8 +6,10 @@ import SubTask from '../../models/SubTask';
 const route = Router();
 
 route.get('/', async (req: Request, res: Response) => {
+    const userCookie = req.cookies.tasksListUbi;
+
     try {
-        const allData = await ToDo.find({});
+        const allData = await ToDo.find({ userCookie });
     
         let subTasks: { position: Number, subTask: object[] }[] = [];
         let position = 0;
@@ -43,7 +45,7 @@ route.get('/', async (req: Request, res: Response) => {
     
         });
 
-        res.cookie('name', 'express').status(200).send(final);
+        res.status(200).send(final);
     }
     catch(err) {
         res.status(500).json({ message: `A problem occured: ${err.message}` });

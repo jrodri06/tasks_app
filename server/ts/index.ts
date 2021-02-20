@@ -12,22 +12,8 @@ import routes from './routes';
 config();
 const app = express();
 
-/*
-const whitelist = ['http://localhost:3000', 'https://react-tasks-ubiquity.herokuapp.com/'];
-
-const corsOptions = {
-  origin: (origin: any, callback: Function) => {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  }
-}
-*/
-
 app.use(cors({
-    "origin": "*",
+    "origin": '*',
     "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
     "preflightContinue": false,
     "optionsSuccessStatus": 204

@@ -1,6 +1,18 @@
 import { Schema, model } from 'mongoose';
 
 const toDoSchema = new Schema({
+  userCookie: {
+    type: String,
+    required: true,
+    min: 1,
+    max: 110
+  },
+  lastUpdatedBy: {
+    type: String,
+    required: true,
+    min: 1,
+    max: 110
+  },
   name: {
     type: String,
     required: true,

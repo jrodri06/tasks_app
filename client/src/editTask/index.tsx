@@ -5,6 +5,8 @@ import { getTask, editTask } from '../helperFunctions/requestsHandlers';
 import { foodTypeValidation, workTypeValidation, emptyFields } from '../helperFunctions/formsValidation';
 
 interface TodoProps {
+    userCookie: String,
+    lastUpdatedBy: String,
     name: String,
     description: String,
     type: String,
@@ -28,6 +30,8 @@ const EditTask = () => {
     const history = useHistory();
 
     const [task, setTask] = useState<Partial<TodoProps>>({
+        userCookie: '',
+        lastUpdatedBy: '',
         name: '',
         description: '',
         type: 'Other',

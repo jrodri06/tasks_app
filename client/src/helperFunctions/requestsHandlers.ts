@@ -119,7 +119,6 @@ export const collectToDos = async (cb: Function) => {
             cb(localTasks.getTasks());
         }
     } catch(err){
-        console.log(err);
         swal('Something went wrong', `${err.message}`, 'error');
     }
     
@@ -164,7 +163,7 @@ export const eraseTask = async (id: string) => {
 
 export const updateDoneStatus = async (dataUpdated: { 
     id: string, 
-    done: boolean 
+    done: boolean
 }) => {
     localTasks.updateTaskFromList(dataUpdated);
 
@@ -224,9 +223,6 @@ export const getPricesTotal = (taskId: String) => {
 }
 
 export const getTask = async (taskId: String) => {
-    console.log('Fetch Get Task');
-    console.log(taskId);
-
     try {
         const response = await fetch(`${localHost}/edit-task/${taskId}`);
         const data = await response.json();
@@ -234,8 +230,6 @@ export const getTask = async (taskId: String) => {
         if(response.status === 500 || response.status === 404 || response.status === 400) {
             throw Error(data);
         }
-        console.log(response);
-        console.log(data);
 
         return data;
     } catch(err) {
