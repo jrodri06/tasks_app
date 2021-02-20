@@ -40,14 +40,12 @@ app.use(cookieParser());
 
 // set a cookie
 app.use((req: Request, res: Response, next: NextFunction) => {
-    const cookie = req.cookies.cookieName;
+    const cookie = req.cookies.tasksListUbi;
     if (cookie === undefined) {
       // no: set a new cookie
-      var randomNumber=Math.random().toString();
-      randomNumber=randomNumber.substring(2,randomNumber.length);
-      res.cookie('cookieName',randomNumber, { expires: new Date(Date.now() + 9999999), httpOnly: false });
-
-      console.log('cookie created successfully');
+      let randomNumber = Math.random().toString();
+      randomNumber = randomNumber.substring(2, randomNumber.length);
+      res.cookie('tasksListUbi', randomNumber, { expires: new Date(Date.now() + 9999999), httpOnly: false });
     } else {
       console.log('cookie exists', cookie);
     } 
