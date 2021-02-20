@@ -134,7 +134,7 @@ const ToDo: FunctionComponent<ToDoProps> = ({
 
             <button className="edit-btn" onClick={editPage}>Edit</button>
 
-            <form name="task-erasure" onSubmit={handleDeleteSubmit}>
+            <form name="task-erasure" className="taskErasure" onSubmit={handleDeleteSubmit}>
                 <input type="submit" value="Delete" />
             </form>
         </div>

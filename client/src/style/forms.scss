@@ -63,6 +63,7 @@ form {
         border-radius: $radius;
         border: 1px;
         margin: 30px 0;
+        padding: $inputPadding;
     }
 
     .exit {
@@ -82,11 +83,13 @@ form {
     transform: translateY(-15%);
 }
 
-form[name="task-erasure"] {
+.taskErasure {
     margin: 2px 0;
     padding: 0;
 
     input {
         margin: 0;
+        border-radius: $radius;
+        padding: $inputPadding;
     }
 }
