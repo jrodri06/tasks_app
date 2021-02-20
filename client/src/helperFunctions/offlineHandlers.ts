@@ -37,27 +37,27 @@ const clearQueues = () => {
         if(pending.length > 0) {
             switch(`${queue}`){
                 case 'newTasksQueue':
-                    pending.forEach(async (task: Object) => await submitCUDInfo('https://jjnr-todo-list.netlify.app/:4001/task/new-todo', task, 'createUpdate'));
+                    pending.forEach(async (task: Object) => await submitCUDInfo('/task/new-todo', task, 'createUpdate'));
                     offlineService.clearQueue(`${queue}`);
                     break;
                 case 'eraseTasksQueue':
-                    pending.forEach(async (task: { id: string }) => await submitCUDInfo('https://jjnr-todo-list.netlify.app/:4001/task/erase-task', task, 'erasure'));
+                    pending.forEach(async (task: { id: string }) => await submitCUDInfo('/task/erase-task', task, 'erasure'));
                     offlineService.clearQueue(`${queue}`);
                     break;
                 case 'updateTasksQueue':
-                    pending.forEach(async (task: Object) => await submitCUDInfo('https://jjnr-todo-list.netlify.app/:4001/task/update-task', task, 'createUpdate'));
+                    pending.forEach(async (task: Object) => await submitCUDInfo('/task/update-task', task, 'createUpdate'));
                     offlineService.clearQueue(`${queue}`);
                     break;
                 case 'newSubtasksQueue':
-                    pending.forEach(async (subtask: Object) => await submitCUDInfo('https://jjnr-todo-list.netlify.app/:4001/task/new-subtask', subtask, 'createUpdate'));
+                    pending.forEach(async (subtask: Object) => await submitCUDInfo('/task/new-subtask', subtask, 'createUpdate'));
                     offlineService.clearQueue(`${queue}`);
                     break;
                 case 'updateSubtasksQueue':
-                    pending.forEach(async (subtask: Object) => await submitCUDInfo('https://jjnr-todo-list.netlify.app/:4001/task/update-subtask', subtask, 'createUpdate'));
+                    pending.forEach(async (subtask: Object) => await submitCUDInfo('/task/update-subtask', subtask, 'createUpdate'));
                     offlineService.clearQueue(`${queue}`);
                     break;
                 default:
-                    pending.forEach(async (id: Object) => await submitCUDInfo('https://jjnr-todo-list.netlify.app/:4001/task/remove-subtask', id, 'erasure'));
+                    pending.forEach(async (id: Object) => await submitCUDInfo('/task/remove-subtask', id, 'erasure'));
                     offlineService.clearQueue(`${queue}`);
             };
         };

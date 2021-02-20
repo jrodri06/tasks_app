@@ -126,7 +126,7 @@ export const collectToDos = async (cb: Function) => {
 // To double check
 export const convertSubToMain = async (id: string) => {
     try {
-        const converted: any = submitCUDInfo('https://jjnr-todo-list.netlify.app/:4001/task/remove-subtask', { id }, 'erasure')
+        const converted: any = submitCUDInfo('/task/remove-subtask', { id }, 'erasure')
             .then(res => res.json())
             .then(data => {
                 const { price, name, done } = data;
@@ -141,7 +141,7 @@ export const convertSubToMain = async (id: string) => {
             })
             .catch(err => console.error(err))
     
-        return await submitCUDInfo(`https://jjnr-todo-list.netlify.app/:4001/task/new-todo`, converted, 'createUpdate');
+        return await submitCUDInfo(`/task/new-todo`, converted, 'createUpdate');
 
     } catch(err) {
         console.error(err);
@@ -153,7 +153,7 @@ export const eraseTask = async (id: string) => {
     localTasks.removeTaskFromList({ id });
 
     try {
-        const response = await submitCUDInfo('https://jjnr-todo-list.netlify.app/:4001/task/erase-task', { id }, 'erasure');
+        const response = await submitCUDInfo('/task/erase-task', { id }, 'erasure');
         return response;
     } catch(err) {
         console.error(err);
@@ -167,7 +167,7 @@ export const updateDoneStatus = async (dataUpdated: {
     localTasks.updateTaskFromList(dataUpdated);
 
     try {
-        const response = await submitCUDInfo('https://jjnr-todo-list.netlify.app/:4001/task/update-task', dataUpdated, 'createUpdate');
+        const response = await submitCUDInfo('/task/update-task', dataUpdated, 'createUpdate');
         return response.status;
     } catch(err) {
         console.error(err);
@@ -184,7 +184,7 @@ export const createSubTask = async (subtask: {
     localTasks.createSubtaskToList(subtask);
 
     try {
-        await submitCUDInfo('https://jjnr-todo-list.netlify.app/:4001/task/new-subtask', subtask, 'createUpdate');
+        await submitCUDInfo('/task/new-subtask', subtask, 'createUpdate');
 
         swal('Added!', `The subtask "${subtask.name}" has been added`, 'success');    
     }  catch(err) {
@@ -196,7 +196,7 @@ export const updateSubTaskDone = async (subtask: Object) => {
     localTasks.updateSubtaskFromList(subtask);
 
     try { 
-        await submitCUDInfo(`https://jjnr-todo-list.netlify.app/:4001/task/update-subtask`, subtask, 'createUpdate');
+        await submitCUDInfo(`/task/update-subtask`, subtask, 'createUpdate');
     }  catch(err) {
         console.error(err);
     }
@@ -222,7 +222,7 @@ export const getTask = async (taskId: String) => {
     console.log(taskId);
 
     try {
-        const response = await fetch(`https://jjnr-todo-list.netlify.app/:4001/edit-task/${taskId}`);
+        const response = await fetch(`/edit-task/${taskId}`);
         const data = await response.json();
 
         if(response.status === 500 || response.status === 404 || response.status === 400) {
@@ -240,7 +240,7 @@ export const getTask = async (taskId: String) => {
 
 export const editTask = async (task: Object,  cb: Function) => {
     try {
-        const response = await fetch('https://jjnr-todo-list.netlify.app/:4001/edit-task/', {
+        const response = await fetch('/edit-task/', {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
