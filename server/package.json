@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "build": "tsc",
-    "postinstall": "npm run build"
+    "postinstall": "npm run build",
+    "dev": "nodemon ./ts/inndex.ts"
   },
   "dependencies": {
     "@types/cors": "^2.8.10",
