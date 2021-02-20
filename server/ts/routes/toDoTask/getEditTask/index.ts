@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 
 import ToDo from '../../../models/ToDo';
+import SubTask from '../../../models/SubTask';
 
 const route = Router();
 
@@ -9,13 +10,17 @@ route.get('/:taskId', async (req: Request, res: Response) => {
 
     try {
         const task = await ToDo.findById(taskId);
-        res.status(200).send(task);
+        const subTasks = await SubTask.find({ parentId: task!._id });
+
+        const taskWithSubs = { ...task?.toObject(), subtask: subTasks };
+
+        res.status(200).send(taskWithSubs);
     } catch (err) {
         res.status(500).send(err);
     }
 });
 
-route.post('/', async (req: Request, res: Response) => {
+route.post('/edit', async (req: Request, res: Response) => {
     let updatedTask:  {
         userCookie: String,
         lastUpdatedBy: String,

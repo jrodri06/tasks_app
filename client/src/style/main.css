@@ -2,21 +2,17 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   background-color: #eeeeee;
 }
-
 body .App {
   height: 100vh;
 }
-
 body .App header h1 {
   text-align: center;
 }
-
 body .App header .filter-display {
   position: absolute;
   left: 10px;
   top: 10px;
 }
-
 body .App header .filter-display .filterDropbtn {
   left: 0;
   top: 0;
@@ -26,35 +22,25 @@ body .App header .filter-display .filterDropbtn {
   z-index: 10;
   margin-bottom: 0;
 }
-
 body .App header .filter-display .dropdown-content {
   display: none;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  flex-direction: column;
   position: relative;
   top: 0px;
   left: 10px;
   background-color: #fff;
   border: 1px outset;
 }
-
 body .App header .filter-display .dropdown-content span {
   cursor: pointer;
   padding: 10px;
 }
-
 body .App header .filter-display .dropdown-content span:hover {
   background-color: #d4d4d4;
 }
-
 body .App header .filter-display .show-filter-options {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
 }
-
 body .App header button {
   padding: 10px;
   border-radius: 5px;
@@ -66,14 +52,12 @@ body .App header button {
   font-weight: bold;
   border: 1px solid;
 }
-
 body .App header .addTaskbtn {
   position: absolute;
   right: 10px;
   top: 10px;
   color: #4caf50;
 }
-
 @media (max-width: 480px) {
   body .App header h1 {
     font-size: 1.8rem;
@@ -90,45 +74,27 @@ body .App header .addTaskbtn {
     top: 5px;
   }
 }
-
 body .App .all-tasks {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -ms-flex-pack: distribute;
-      justify-content: space-around;
-  -ms-flex-flow: wrap;
-      flex-flow: wrap;
+  justify-content: space-around;
+  flex-flow: wrap;
 }
 
 form {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  flex-direction: column;
   padding: 0 10px;
   background-color: #fff;
   border-radius: 5px;
 }
-
 form h1 {
   text-align: center;
 }
-
 form label {
   margin: 10px 0;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  flex-direction: column;
 }
-
 form label select {
   padding: 10px;
   margin: 10px 0;
@@ -136,32 +102,27 @@ form label select {
   border: 1px;
   background-color: #eee;
 }
-
-form .required-subtask {
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+@media all and (max-width: 480px) {
+  form label select {
+    padding: 10px;
+  }
 }
-
+form .required-subtask {
+  flex-direction: row;
+  align-items: center;
+}
 form .required-subtask input {
   margin: 10px 20px;
 }
-
 form fieldset {
   padding: 0;
   margin: 0;
   width: 100%;
   border: 0;
 }
-
-form fieldset input[type="date"] {
+form fieldset input[type=date] {
   width: 97%;
 }
-
 form input {
   padding: 10px;
   margin: 10px 0;
@@ -169,7 +130,6 @@ form input {
   background-color: #eee;
   border: 1px;
 }
-
 form .btn {
   background-color: #169adc;
   color: #fff;
@@ -177,7 +137,6 @@ form .btn {
   border: 1px;
   margin: 30px 0;
 }
-
 form .exit {
   font-size: 1.5rem;
   cursor: pointer;
@@ -191,17 +150,7 @@ form .exit {
   max-width: 768px;
   margin: auto;
   top: 20%;
-  -webkit-transform: translateY(-15%);
-          transform: translateY(-15%);
-}
-
-form[name="task-erasure"] {
-  margin: 2px 0;
-  padding: 0;
-}
-
-form[name="task-erasure"] input {
-  margin: 0;
+  transform: translateY(-15%);
 }
 
 .todo-task {
@@ -210,105 +159,70 @@ form[name="task-erasure"] input {
   padding: 15px 10px;
   min-width: 250px;
   margin: 10px;
-  height: -webkit-fit-content;
-  height: -moz-fit-content;
   height: fit-content;
 }
-
 .todo-task .todo-header {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
   font-size: 1.2rem;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  justify-content: space-between;
   padding: 0 0 10px;
 }
-
 .todo-task .todo-header .todo-name {
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  display: -webkit-box;
-  display: -ms-flexbox;
+  align-items: center;
   display: flex;
   font-weight: 700;
   color: #595959;
 }
-
 .todo-task .todo-header .todo-name input {
   height: 17px;
   width: 30px;
   margin: 0;
 }
-
 .todo-task .todo-header .todo-price {
   text-decoration: underline;
   margin: 0 5px;
 }
-
 .todo-task .todo-description {
   text-align: center;
   margin: 10px 0;
   font-size: 1rem;
 }
-
 .todo-task .todo-special {
   background-color: #f9f6e8;
   margin: 15px 0 10px;
   padding: 15px 10px;
   border-radius: 5px;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  flex-direction: column;
 }
-
 .todo-task .todo-special div {
   padding: 5px;
 }
-
 .todo-task .todo-special div span {
   font-weight: 700;
 }
-
 .todo-task .Other {
   background-color: #f5f8f9;
 }
-
 .todo-task .Food {
   background-color: #f2fcee;
 }
-
 .todo-task .Work {
   background-color: #eef2fc;
 }
-
 .todo-task .todo-type {
   padding: 15px 10px;
   border-radius: 5px;
   color: #82878e;
   font-weight: bold;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  justify-content: space-between;
+  align-items: center;
   margin: 15px 0 10px;
 }
-
 .todo-task .todo-type select {
   padding: 3px;
 }
-
 .todo-task .edit-btn {
   color: #fff;
   border-radius: 5px;
@@ -319,13 +233,15 @@ form[name="task-erasure"] input {
   padding: 10px;
   margin: 10px 0;
 }
-
-.todo-task form[name="task-erasure"] input {
+.todo-task .taskErasure {
   color: #b13046;
   border-radius: 5px;
   background-color: #fceff0;
   border: 0px;
   font-size: 1rem;
+  width: 100%;
+  margin: 2px 0;
+  padding: 10px;
 }
 
 /* Animation */
@@ -348,54 +264,41 @@ form[name="task-erasure"] input {
 .todo-subtasks {
   padding: 5px 0 10px 0;
 }
-
 .todo-subtasks .subtasks-area .subtask-total-price {
   text-align: right;
   padding: 5px;
 }
-
 .todo-subtasks .subtasks-area .subtask-total-price span {
   font-weight: 500;
   text-decoration: underline;
 }
-
 .todo-subtasks .subtasks-area .subTasks {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
   margin: 5px 0;
   padding: 5px;
-  -webkit-box-align: baseline;
-      -ms-flex-align: baseline;
-          align-items: baseline;
+  align-items: baseline;
   cursor: pointer;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  justify-content: space-between;
 }
-
 .todo-subtasks .subtasks-area .subTasks span {
   margin: 0 10px;
 }
-
 .todo-subtasks .subtasks-area .subTasks .subTasks-price {
   padding: 0;
   font-weight: bold;
   margin: 0;
 }
-
 .todo-subtasks .subtasks-area .subTasks input {
   margin: 5px 10px;
 }
-
 .todo-subtasks .subtasks-area .subTasks .concluded {
   text-decoration: line-through;
 }
-
 .todo-subtasks .add-subtask {
   padding: 10px 0;
   margin: 0 10px;
   font-weight: bold;
   cursor: pointer;
 }
+
 /*# sourceMappingURL=main.css.map */

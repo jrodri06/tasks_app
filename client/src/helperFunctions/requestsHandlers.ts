@@ -157,7 +157,7 @@ export const eraseTask = async (id: string) => {
         const response = await submitCUDInfo(`${localHost}/task/erase-task`, { id }, 'erasure');
         return response;
     } catch(err) {
-        console.error(err);
+        throw Error('Failed to erase the task');
     }
 };
 
@@ -224,7 +224,7 @@ export const getPricesTotal = (taskId: String) => {
 
 export const getTask = async (taskId: String) => {
     try {
-        const response = await fetch(`${localHost}/edit-task/${taskId}`);
+        const response = await fetch(`${localHost}/task/${taskId}`);
         const data = await response.json();
 
         if(response.status === 500 || response.status === 404 || response.status === 400) {
@@ -240,7 +240,7 @@ export const getTask = async (taskId: String) => {
 
 export const editTask = async (task: Object,  cb: Function) => {
     try {
-        const response = await fetch(`${localHost}/edit-task/`, {
+        const response = await fetch(`${localHost}/task/edit`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'

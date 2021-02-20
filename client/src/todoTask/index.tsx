@@ -34,12 +34,18 @@ const ToDo: FunctionComponent<ToDoProps> = ({
 }) => {
 
     const history = useHistory();
-    const handleRedirect = () => {
+    const handleRedirect = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.stopPropagation();
         history.push(`/add-subtask/${id}`);
     };
 
-    const editPage = () => {
+    const editPage = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.stopPropagation();
         history.push(`/edit-task/${id}`);
+    }
+
+    const blockPropagation = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+        e.stopPropagation();
     }
 
     const updateTask = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,8 +73,8 @@ const ToDo: FunctionComponent<ToDoProps> = ({
 
     };
 
-    const handleDeleteSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    const handleDeleteSubmit = async (e: React.MouseEvent) => {
+        e.stopPropagation();
 
         swal({
             title: `Are you sure you want to erase "${name}"?`,
@@ -76,31 +82,40 @@ const ToDo: FunctionComponent<ToDoProps> = ({
             icon: 'warning',
             buttons: ['Cancel', true],
             dangerMode: true,
-        }).then(async (willDelete) => {
-            if (willDelete) {
-                await eraseTask(id);
+        })
+            .then(async (willDelete) => {
+                if (willDelete) {
+                    await eraseTask(id);
 
-                childUpdate({
-                    updateType: 'Erasure',
-                    id
-                });
+                    childUpdate({
+                        updateType: 'Erasure',
+                        id
+                    });
 
-                swal('Your task has been deleted!', {
-                    icon: 'success',
-                });
-            } else {
-                swal('Your task is safe!');
-            }
-        });
+                    swal('Your task has been deleted!', {
+                        icon: 'success',
+                    });
+                } else {
+                    swal('Your task is safe!');
+                }
+            })
+            .catch(err => {
+                swal('Something went wrong', `${err}`, 'error');
+            })
+    };
+
+    const taskPage = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        history.push(`/task/${id}`);
     };
 
     return (
-        <div className={ done ? `todo-task task-concluded ${displayDone}` : "todo-task" }>
+        <div className={ done ? `todo-task task-concluded ${displayDone}` : "todo-task" } onClick={ taskPage }>
             <div className="todo-header">
                 <div className="todo-name">
                     <input 
                         type="checkbox" 
                         onChange={updateTask} 
+                        onClick={blockPropagation}
                         checked={done} 
                     />
                     { name }
@@ -134,9 +149,7 @@ const ToDo: FunctionComponent<ToDoProps> = ({
 
             <button className="edit-btn" onClick={editPage}>Edit</button>
 
-            <form name="task-erasure" className="taskErasure" onSubmit={handleDeleteSubmit}>
-                <input type="submit" value="Delete" />
-            </form>
+            <button name="task-erasure" className="taskErasure" onClick={handleDeleteSubmit} type="submit">Delete</button>
         </div>
     )
 }

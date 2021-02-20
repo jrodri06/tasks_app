@@ -18,7 +18,7 @@ routes.use('/task/all-tasks', allTasks);
 routes.use('/task/new-todo', createTask);
 routes.use('/task/erase-task', eraseTask);
 routes.use('/task/update-task', updateTask);
-routes.use('/edit-task', getEditTask);
+routes.use('/task', getEditTask);
 
 routes.use('/task/new-subtask', newSubTask);
 routes.use('/task/remove-subtask', removeSubTask);

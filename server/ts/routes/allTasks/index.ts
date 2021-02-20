@@ -10,7 +10,7 @@ route.get('/', async (req: Request, res: Response) => {
 
     try {
         const allData = await ToDo.find({ userCookie });
-    
+
         let subTasks: { position: Number, subTask: object[] }[] = [];
         let position = 0;
     

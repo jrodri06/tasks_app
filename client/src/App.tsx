@@ -5,6 +5,7 @@ import Dashboard from './dashboard';
 import CreateTodo from './forms/create-todo';
 import AddSubtask from './forms/add-subtask';
 import EditTask from './editTask';
+import TodoTaskPage from './todoTask/todoTaskPage';
 
 function App() {
   return (
@@ -18,6 +19,10 @@ function App() {
 
           <Route path="/new-todo">
             <CreateTodo />
+          </Route>
+
+          <Route path="/task/:taskId">
+            <TodoTaskPage />
           </Route>
 
           <Route path="/edit-task/:taskId">
