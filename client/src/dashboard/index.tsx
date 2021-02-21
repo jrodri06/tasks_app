@@ -33,10 +33,13 @@ const Dashboard = () => {
         } else {
             const response = await convertSubToMain(subtaskId);
 
+            console.log('Response of Drop');
+            console.log(response);
+
             setChildUpdate({
                 updateType: 'Subtask_To_Maintask',
                 response
-            });
+            })
         }
     }
 

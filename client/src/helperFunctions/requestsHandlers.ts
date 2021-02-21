@@ -41,11 +41,6 @@ const handlePostWhenOffline = async (
         return localTasks.getTasks();
     } 
     else {
-        console.log('Got Here Init');
-        console.log({
-            url, requestObj
-        });
-
         return await fetch(url, requestObj);
     }
 }
@@ -132,31 +127,25 @@ export const collectToDos = async (cb: Function) => {
 // To double check
 export const convertSubToMain = async (id: string) => {
     try {
-        submitCUDInfo(`${localHost}/task/remove-subtask`, { id }, 'erasure')
-            .then(res => res.json())
-            .then(data => {
-                const { price, name, done, userCookie, lastUpdatedBy } = data;
-                return {
-                    userCookie, 
-                    lastUpdatedBy,
-                    name,
-                    description: '',
-                    type: 'Other',
-                    specialInput: {},
-                    price,
-                    done
-                }
-            })
-            .then((converted) => submitCUDInfo(`${localHost}/task/new-todo`, converted, 'createUpdate'))
-            .catch(err => console.error(err))
-    
-        // return await submitCUDInfo(`${localHost}/task/new-todo`, converted, 'createUpdate');
+        const erasureResponse = await submitCUDInfo(`${localHost}/task/remove-subtask`, { id }, 'erasure');
+        const taskElements = await erasureResponse.json();
+        const { price, name, done, userCookie, lastUpdatedBy } = taskElements;
 
+        const converted = {
+            userCookie, 
+            lastUpdatedBy,
+            name,
+            description: '',
+            type: 'Other',
+            specialInput: {},
+            price,
+            done
+        };
+        return await submitCUDInfo(`${localHost}/task/new-todo`, converted, 'createUpdate');
     } catch(err) {
-        console.error(err);
+        console.error(err)
     }
 };
-
 
 export const eraseTask = async (id: string) => {
     // localTasks.removeTaskFromList({ id });
