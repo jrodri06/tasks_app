@@ -8,8 +8,12 @@ const route = Router();
 route.get('/:taskId/:userOrigin', async (req: Request, res: Response) => {
     const { taskId, userOrigin } = req.params;
 
+    // userCookie: userOrigin
     try {
-        const task = await ToDo.findOne({ _id: taskId, userCookie: userOrigin });
+        const task = await ToDo.findById({ _id: taskId });
+
+        console.log(userOrigin);
+        console.log(task);
 
         if(task === null) {
             throw Error('Could not find task from link provided');
