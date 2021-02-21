@@ -13,7 +13,9 @@ route.post('/', async (req: Request, res: Response) => {
         try {
             const { id } = req.body;
 
-            const originalUser = await ToDo.findOne({  _id: id, userCookie });
+            const originalUser = process.env.NODE_ENV === 'development' ? 
+                await ToDo.findOne({  _id: id }) :
+                await ToDo.findOne({  _id: id, userCookie });
 
             if(originalUser === null) {
                 throw Error('You are not the original creator of this task so you cannot delete it');

@@ -28,15 +28,18 @@ app.use(cookieParser());
 app.use((req: Request, res: Response, next: NextFunction) => {
     const cookie = req.cookies.tasksListUbi;
     if (cookie === undefined) {
-      // no: set a new cookie
-      let randomNumber = Math.random().toString();
-      randomNumber = randomNumber.substring(2, randomNumber.length);
-      res.cookie('tasksListUbi', randomNumber, { expires: new Date(Date.now() + 9999999), httpOnly: false });
+        let randomNumber = Math.random().toString();
+        randomNumber = randomNumber.substring(2, randomNumber.length);
+
+        //10 * 365 * 24 * 60 * 60 * 1000 === 315360000000, or 10 years in milliseconds
+        const expiryDate = new Date(Number(new Date()) + 315360000000);
+
+        res.cookie('tasksListUbi', randomNumber, { expires: expiryDate, httpOnly: false });
     } else {
-      console.log('cookie exists', cookie);
+        console.log('cookie exists', cookie);
     } 
     next();
-  });
+});
 
 mongoose.set('useFindAndModify', false);
 mongoose.connect(process.env.DB_CONNECT!, {

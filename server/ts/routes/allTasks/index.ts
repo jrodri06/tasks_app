@@ -9,7 +9,9 @@ route.get('/', async (req: Request, res: Response) => {
     const userCookie = req.cookies.tasksListUbi;
 
     try {
-        const allData = await ToDo.find({ userCookie });
+        const allData = process.env.NODE_ENV === 'development' ? 
+            await ToDo.find({}) : 
+            await ToDo.find({ userCookie });
 
         let subTasks: { position: Number, subTask: object[] }[] = [];
         let position = 0;
