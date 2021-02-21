@@ -41,9 +41,21 @@ const EditTask = () => {
         _id: ''
     });
 
+    const [userCookie, setUserCookie] = useState('');
+
     useEffect(() => {
+        const path = window.location.pathname;
+        const pathDivided = path.split('/');
+        const userOrigin = pathDivided[pathDivided.length - 1];
+
+        const existingCookies = document.cookie;
+        const getVal = existingCookies.split('=');
+        const name = getVal[getVal.length - 2];
+        const cookieVal = name === 'tasksListUbi' ? getVal[getVal.length - 1] : '';
+        setUserCookie(cookieVal);
+
         const fetchTask = async () => {
-            const taskToEdit: any = await getTask(taskId, '');
+            const taskToEdit: any = await getTask(taskId, userOrigin);
             setTask(taskToEdit);
         };
         
@@ -94,6 +106,8 @@ const EditTask = () => {
         if(!emptyFields(task.name!.toString())){
             return false;
         };
+
+        task.lastUpdatedBy = userCookie;
 
         switch(task.type) {
             case 'Food':

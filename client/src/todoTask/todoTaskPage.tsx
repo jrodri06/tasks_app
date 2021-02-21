@@ -40,7 +40,7 @@ const TodoTaskPage = () => {
     });
 
     const [deleted, setDeleted] = useState(false);
-
+    const [cookieOrigin, setCookieOrigin] = useState('');
     const [lastUpdateUser, setLastUpdateUser] = useState('');
 
     useEffect(() => {
@@ -72,7 +72,8 @@ const TodoTaskPage = () => {
         const userOrigin = pathDivided[pathDivided.length - 1];
 
         const selectedTask = await getTask(taskId, userOrigin);
-        console.log(selectedTask);
+
+        setCookieOrigin(userOrigin);
 
         if(selectedTask === undefined) {
             setDeleted(true);
@@ -92,7 +93,7 @@ const TodoTaskPage = () => {
     };
 
     const editPage = () => {
-        history.push(`/edit-task/${task._id}`);
+        history.push(`/edit-task/${task._id}/${cookieOrigin}`);
     }
 
     const updateTask = async (e: React.ChangeEvent<HTMLInputElement>) => {

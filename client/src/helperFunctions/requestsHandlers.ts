@@ -106,7 +106,7 @@ export const formPath = (userData: object, cb: Function) => {
 
 // No CUD
 export const collectToDos = async (cb: Function) => {
-    cb(localTasks.getTasks());
+    // cb(localTasks.getTasks());
 
     try {
         const response = await fetch(`${localHost}/task/all-tasks`);
@@ -151,7 +151,7 @@ export const convertSubToMain = async (id: string) => {
 
 
 export const eraseTask = async (id: string) => {
-    localTasks.removeTaskFromList({ id });
+    // localTasks.removeTaskFromList({ id });
 
     try {
         const response = await submitCUDInfo(`${localHost}/task/erase-task`, { id }, 'erasure');
@@ -165,7 +165,7 @@ export const updateDoneStatus = async (dataUpdated: {
     id: string, 
     done: boolean
 }) => {
-    localTasks.updateTaskFromList(dataUpdated);
+    // localTasks.updateTaskFromList(dataUpdated);
 
     try {
         const response = await submitCUDInfo(`${localHost}/task/update-task`, dataUpdated, 'createUpdate');
@@ -182,7 +182,7 @@ export const createSubTask = async (subtask: {
     price: String
 }) => {
 
-    localTasks.createSubtaskToList(subtask);
+    // localTasks.createSubtaskToList(subtask);
 
     try {
         await submitCUDInfo(`${localHost}/task/new-subtask`, subtask, 'createUpdate');
@@ -194,7 +194,7 @@ export const createSubTask = async (subtask: {
 }
 
 export const updateSubTaskDone = async (subtask: Object) => {
-    localTasks.updateSubtaskFromList(subtask);
+    // localTasks.updateSubtaskFromList(subtask);
 
     try { 
         await submitCUDInfo(`${localHost}/task/update-subtask`, subtask, 'createUpdate');

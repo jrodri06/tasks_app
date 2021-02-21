@@ -43,7 +43,7 @@ const ToDo: FunctionComponent<ToDoProps> = ({
 
     const editPage = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.stopPropagation();
-        history.push(`/edit-task/${id}`);
+        history.push(`/edit-task/${id}/${userCookie}`);
     }
 
     const blockPropagation = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
