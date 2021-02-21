@@ -2,6 +2,8 @@
 
 You can find a runnning production version of this app in: https://react-tasks-ubiquity.herokuapp.com/
 
+Please note that the app might take up to 30 seconds to get running if it hasn't been use for a while.
+
 ## Run on localhost
 
 To run this app in your localhost simply clone the app, run two different terminals:
