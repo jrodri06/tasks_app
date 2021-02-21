@@ -5,6 +5,9 @@ body {
 body .App {
   height: 100vh;
 }
+body .App button {
+  cursor: pointer;
+}
 body .App header h1 {
   text-align: center;
 }
@@ -16,7 +19,6 @@ body .App header .filter-display {
 body .App header .filter-display .filterDropbtn {
   left: 0;
   top: 0;
-  cursor: pointer;
   color: #595959;
   font-weight: bold;
   z-index: 10;
@@ -48,7 +50,6 @@ body .App header button {
   background-color: #fff;
   border: 0px;
   font-size: 1rem;
-  cursor: pointer;
   font-weight: bold;
   border: 1px solid;
 }
@@ -78,6 +79,18 @@ body .App .all-tasks {
   display: flex;
   justify-content: space-around;
   flex-flow: wrap;
+}
+body .App .dashboard-btn {
+  left: 0;
+  top: 0;
+  color: #595959;
+  font-weight: bold;
+  z-index: 10;
+  margin: 10px;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 5px;
+  border: 1px solid;
 }
 
 form {
@@ -243,6 +256,18 @@ form .exit {
   margin: 2px 0;
   padding: 10px;
 }
+.todo-task .last-update-by {
+  display: inline-block;
+  width: 99%;
+  text-align: right;
+  color: #c1c0c0;
+  font-weight: bold;
+  padding: 0 5px 15px;
+}
+
+.no-tasks {
+  text-align: center;
+}
 
 /* Animation */
 .hide-todo {
@@ -277,7 +302,7 @@ form .exit {
   margin: 5px 0;
   padding: 5px;
   align-items: baseline;
-  cursor: pointer;
+  cursor: move;
   justify-content: space-between;
 }
 .todo-subtasks .subtasks-area .subTasks span {

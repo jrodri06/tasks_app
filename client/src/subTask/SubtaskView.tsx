@@ -34,6 +34,10 @@ const SubtaskView: FunctionComponent<SubtaskViewProps> = ({
         e.dataTransfer.setData('subtask_id', target.id );
     };
 
+    const blockPropagation = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+        e.stopPropagation();
+    }
+
     const dragOver = (e: any) => {
         e.stopPropagation();
     };
@@ -46,7 +50,11 @@ const SubtaskView: FunctionComponent<SubtaskViewProps> = ({
             onDragOver={dragOver}
         >
             <div>
-                <input type="checkbox" defaultChecked={done} onChange={handleChange} />
+                <input type="checkbox" 
+                    defaultChecked={done} 
+                    onClick={blockPropagation}
+                    onChange={handleChange} 
+                />
                 <span className={concluded ? "subTasks-name concluded" : "subTasks-name"}>{name}</span>
             </div>
             { price !== null && <span className={concluded ? "subTasks-price concluded" : "subTasks-price"}>{price}kr</span> }

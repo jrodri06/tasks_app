@@ -43,7 +43,7 @@ const EditTask = () => {
 
     useEffect(() => {
         const fetchTask = async () => {
-            const taskToEdit: any = await getTask(taskId);
+            const taskToEdit: any = await getTask(taskId, '');
             setTask(taskToEdit);
         };
         

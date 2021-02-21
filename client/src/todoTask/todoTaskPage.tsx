@@ -39,20 +39,46 @@ const TodoTaskPage = () => {
         _id: ''
     });
 
+    const [deleted, setDeleted] = useState(false);
+
+    const [lastUpdateUser, setLastUpdateUser] = useState('');
+
     useEffect(() => {
+        const checkLastEdit = () => {
+            const existingCookies = document.cookie;
+            const getVal = existingCookies.split('=');
+    
+            const name = getVal[getVal.length - 2];
+            const cookieVal = name === 'tasksListUbi' ? getVal[getVal.length - 1] : '';
+    
+            if(cookieVal === '') {
+                setLastUpdateUser('Last updated by someone else');
+            } else if(cookieVal === task.lastUpdatedBy) {
+                setLastUpdateUser('Last updated by you');
+            } else {
+                setLastUpdateUser('Last updated by someone else');
+            }
+        };
+
         renderTask();
-    }, []);
+        setDeleted(false);
+        checkLastEdit();
+    }, [task.lastUpdatedBy]);
 
     const renderTask = async () => {
-        console.log('Render Task');
         const path = window.location.pathname;
         const pathDivided = path.split('/');
-        const taskId = pathDivided[pathDivided.length - 1];
+        const taskId = pathDivided[pathDivided.length - 2];
+        const userOrigin = pathDivided[pathDivided.length - 1];
 
-        console.log(taskId);
+        const selectedTask = await getTask(taskId, userOrigin);
+        console.log(selectedTask);
 
-        const selectedTask = await getTask(taskId);
-        setTask(selectedTask);
+        if(selectedTask === undefined) {
+            setDeleted(true);
+        } else {
+            setTask(selectedTask);
+        }
     };
 
     const history = useHistory();
@@ -71,6 +97,8 @@ const TodoTaskPage = () => {
 
     const updateTask = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const checked = e.target.checked;
+
+        setTask({ ...task, done: checked });
 
         await updateDoneStatus({ 
             id: task._id!,
@@ -94,6 +122,8 @@ const TodoTaskPage = () => {
                     swal('Your task has been deleted!', {
                         icon: 'success',
                     });
+
+                    setDeleted(true);
                 } else {
                     swal('Your task is safe!');
                 }
@@ -101,6 +131,20 @@ const TodoTaskPage = () => {
             .catch(err => {
                 swal('Something went wrong', `${err}`, 'error');
             })
+    };
+
+    if(deleted) {
+        return (
+            <div className="task-view">
+                <button 
+                    onClick={backToDashboard} 
+                    className="dashboard-btn">
+                        Dashboard
+                </button>
+
+                <div className="no-tasks">Nothing to see here {'😳'}</div>
+            </div>
+        )
     };
 
     return (
@@ -112,6 +156,7 @@ const TodoTaskPage = () => {
             </button>
 
             <div className="todo-task">
+                <span className="last-update-by">{ lastUpdateUser }</span>
                 <div className="todo-header">
                     <div className="todo-name">
                         <input 

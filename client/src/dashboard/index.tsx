@@ -47,7 +47,6 @@ const Dashboard = () => {
         setDisplayDoneTasks(displayDone)
     }
 
-    console.log('Dahsboard');
     const tasksDone = () => {
         const done = data.filter(
             (todo: { 
@@ -58,6 +57,7 @@ const Dashboard = () => {
                 type: String,
                 specialInput: Object,
                 price: Number, 
+                userCookie: String,
                 subtask: []
             }) => todo.done
         );
@@ -74,6 +74,7 @@ const Dashboard = () => {
                     type: String,
                     specialInput: Object,
                     price: Number, 
+                    userCookie: String,
                     subtask: []
                 }) => (<ToDo 
                         key={todo._id}
@@ -85,6 +86,7 @@ const Dashboard = () => {
                         type={todo.type}
                         done={todo.done}
                         childUpdate={setChildUpdate}
+                        userCookie={todo.userCookie}
                         subtask={todo.subtask}
                         displayDone="filtered-display"
                     />)
@@ -140,6 +142,7 @@ const Dashboard = () => {
                         type: String,
                         specialInput: Object,
                         price: Number, 
+                        userCookie: String,
                         subtask: []
                     }) => (<ToDo 
                             key={todo._id}
@@ -151,6 +154,7 @@ const Dashboard = () => {
                             type={todo.type}
                             done={todo.done}
                             childUpdate={setChildUpdate}
+                            userCookie={todo.userCookie}
                             subtask={todo.subtask}
                         />)
                     )  

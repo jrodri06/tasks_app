@@ -104,6 +104,19 @@ $marginBlock: 15px 0 10px;
         margin: 2px 0;
         padding: 10px;
     }
+
+    .last-update-by {
+        display: inline-block;
+        width: 99%;
+        text-align: right;
+        color: #c1c0c0;
+        font-weight: bold;
+        padding: 0 5px 15px;
+    }
+}
+
+.no-tasks {
+    text-align: center;
 }
 
 

@@ -5,18 +5,22 @@ import SubTask from '../../../models/SubTask';
 
 const route = Router();
 
-route.get('/:taskId', async (req: Request, res: Response) => {
-    const { taskId } = req.params;
+route.get('/:taskId/:userOrigin', async (req: Request, res: Response) => {
+    const { taskId, userOrigin } = req.params;
 
     try {
-        const task = await ToDo.findById(taskId);
-        const subTasks = await SubTask.find({ parentId: task!._id });
+        const task = await ToDo.findOne({ _id: taskId, userCookie: userOrigin });
 
-        const taskWithSubs = { ...task?.toObject(), subtask: subTasks };
-
-        res.status(200).send(taskWithSubs);
-    } catch (err) {
-        res.status(500).send(err);
+        if(task === null) {
+            throw Error('Could not find task from link provided');
+        } else {
+            const subTasks = await SubTask.find({ parentId: task!._id });
+            const taskWithSubs = { ...task?.toObject(), subtask: subTasks };
+    
+            res.status(200).send(taskWithSubs);
+        }
+    } catch ({ message }) {
+        res.status(400).json(message);
     }
 });
 

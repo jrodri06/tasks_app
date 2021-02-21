@@ -10,6 +10,10 @@ body {
     .App {
         height: 100vh;
 
+        button {
+            cursor: pointer;
+        }
+
         header {
             h1 {
                 text-align: center
@@ -23,7 +27,6 @@ body {
                 .filterDropbtn {
                     left: 0;
                     top: 0;
-                    cursor: pointer;
                     color: #595959;
                     font-weight: bold;
                     z-index: 10;
@@ -62,7 +65,6 @@ body {
                 background-color: #fff;
                 border: 0px;
                 font-size: 1rem;
-                cursor: pointer;
                 font-weight: bold;
                 border: 1px solid;
             }
@@ -105,7 +107,6 @@ body {
         .dashboard-btn {
             left: 0;
             top: 0;
-            cursor: pointer;
             color: #595959;
             font-weight: bold;
             z-index: 10;

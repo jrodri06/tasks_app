@@ -222,9 +222,9 @@ export const getPricesTotal = (taskId: String) => {
     }
 }
 
-export const getTask = async (taskId: String) => {
+export const getTask = async (taskId: String, userOrigin: String) => {
     try {
-        const response = await fetch(`${localHost}/task/${taskId}`);
+        const response = await fetch(`${localHost}/task/${taskId}/${userOrigin}`);
         const data = await response.json();
 
         if(response.status === 500 || response.status === 404 || response.status === 400) {

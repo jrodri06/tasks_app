@@ -16,6 +16,7 @@ type ToDoProps = {
     specialInput: Object
     displayDone?: string 
     price: Number
+    userCookie: String
     childUpdate: React.Dispatch<React.SetStateAction<object>>
     subtask: []
 }
@@ -27,6 +28,7 @@ const ToDo: FunctionComponent<ToDoProps> = ({
     description,
     type,
     specialInput,
+    userCookie,
     price,
     childUpdate,
     displayDone,
@@ -105,7 +107,7 @@ const ToDo: FunctionComponent<ToDoProps> = ({
     };
 
     const taskPage = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        history.push(`/task/${id}`);
+        history.push(`/task/${id}/${userCookie}`);
     };
 
     return (
