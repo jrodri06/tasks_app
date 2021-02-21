@@ -134,7 +134,12 @@ const ToDo: FunctionComponent<ToDoProps> = ({
                 <span>{ type }</span>
             </div>
 
-            { Object.keys(specialInput).length > 0 && <SpecialInput inputs={specialInput} /> }
+            {
+                Object.keys(specialInput) !== undefined && 
+                Object.keys(specialInput).length > 0 && 
+
+                <SpecialInput inputs={specialInput} /> 
+            }
 
             <div className="todo-subtasks">
                 <span 
@@ -143,7 +148,7 @@ const ToDo: FunctionComponent<ToDoProps> = ({
                 >
                     {'\u002B'} Add a subtask
                 </span> 
-                { subtask.length > 0 && <Subtask 
+                { subtask !== undefined && subtask.length > 0 && <Subtask 
                     subtasks={subtask} 
                     subTaskTotalPrice={getPricesTotal(id)}
                 /> }

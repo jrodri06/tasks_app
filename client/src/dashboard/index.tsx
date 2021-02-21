@@ -20,21 +20,15 @@ const Dashboard = () => {
         history.push(path);
     }
 
-
     // Drop subtask in Dashboard
     const drop = async (e: React.DragEvent<HTMLElement>) => {
         e.preventDefault();
-        console.log('Dropped in Dasboard');
         const subtaskId = e.dataTransfer.getData('subtask_id');
-        console.log(subtaskId);
 
         if (subtaskId === '') {
             return;
         } else {
             const response = await convertSubToMain(subtaskId);
-
-            console.log('Response of Drop');
-            console.log(response);
 
             setChildUpdate({
                 updateType: 'Subtask_To_Maintask',
@@ -82,7 +76,7 @@ const Dashboard = () => {
                     userCookie: String,
                     subtask: []
                 }) => (<ToDo 
-                        key={todo._id}
+                        key={todo._id || `${Math.random()}`}
                         id={todo._id}
                         name={todo.name} 
                         description={todo.description}
@@ -150,7 +144,7 @@ const Dashboard = () => {
                         userCookie: String,
                         subtask: []
                     }) => (<ToDo 
-                            key={todo._id}
+                            key={todo._id || `${Math.random()}`}
                             id={todo._id}
                             name={todo.name} 
                             description={todo.description}

@@ -7,6 +7,39 @@ export const localTasks = {
         localStorage.setItem('tasks', JSON.stringify(payload));
     },
 
+    createTaskToList(task: {
+        name: String,
+        description: String,
+        type: String,
+        userCookie: String,
+        lastUpdatedBy: String,
+        subtask: [],
+        specialInput: {
+            fooCarbs?: Number,
+            foodFat?: Number,
+            foodProtein?: Number,
+            workDeadline?: string
+        },
+        price: String,
+        done: boolean
+    }) {
+        const current = this.getTasks();
+
+        const existingCookies = document.cookie;
+        const getVal = existingCookies.split('=');
+        const name = getVal[getVal.length - 2];
+        const cookieVal = name === 'tasksListUbi' ? getVal[getVal.length - 1] : '';
+
+        task.userCookie = cookieVal;
+        task.lastUpdatedBy = cookieVal;
+        task.lastUpdatedBy = cookieVal;
+        task.subtask = [];
+
+        current.push(task);
+
+        this.makeFullList(current);
+    },
+
     removeTaskFromList(element: { id: string }) {
         const current = this.getTasks();
         const newList = current.filter((task: { _id: string }) => task._id !== element.id);
@@ -56,6 +89,7 @@ export const localTasks = {
     },
 
     updateSubtaskFromList(subtask: any) {
+        console.log('I have been called');
         const current = this.getTasks();
 
         let parentTask: {

@@ -5,7 +5,9 @@ import ToDo from '../../../models/ToDo';
 const route = Router();
 
 route.post('/', async (req: Request, res: Response) => {
-    const userCookie = req.cookies.tasksListUbi;
+    const userCookie = process.env.NODE_ENV === 'development' ? 
+            'thisIsJustForTesting' : 
+            req.cookies.tasksListUbi;
 
     const { name, description, type, price, specialInput } = req.body;
 

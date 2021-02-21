@@ -15,28 +15,25 @@ const handlePostWhenOffline = async (
     if (!navigator.onLine) {
         const direction = url.split('/');
 
-        switch(direction[direction.length - 1]) {
-            case 'new-todo':
-                offlineService.updateQueue(allQueues.newTasksQueue, details);
-                return details;
-            case 'remove-subtask':
-                offlineService.updateQueue(allQueues.eraseSubtasksQueue, details);
-                break;
-            case 'erase-task':
-                offlineService.updateQueue(allQueues.eraseTasksQueue, details);
-                break;
-            case 'update-task':
-                offlineService.updateQueue(allQueues.updateTasksQueue, details);
-                break;
-            case 'new-subtask':
-                offlineService.updateQueue(allQueues.newSubtasksQueue, details);
-                break;
-            case 'update-subtask':
-                offlineService.updateQueue(allQueues.updateSubtasksQueue, details);
-                break;
-            default:
-                return;
-        }
+        if(direction.includes('new-todo')) {
+            offlineService.updateQueue(allQueues.newTasksQueue, details);
+            localTasks.createTaskToList(details);
+            return details;
+        } else if(direction.includes('erase-task')) {
+            offlineService.updateQueue(allQueues.eraseTasksQueue, details);
+            localTasks.removeTaskFromList(details);
+        } else if(direction.includes('update-task')) {
+            offlineService.updateQueue(allQueues.updateTasksQueue, details);
+            localTasks.updateTaskFromList(details);
+        } else if(direction.includes('new-subtask')) {
+            offlineService.updateQueue(allQueues.newSubtasksQueue, details);
+            localTasks.createSubtaskToList(details);
+        } else if(direction.includes('update-subtask')) {
+            offlineService.updateQueue(allQueues.updateSubtasksQueue, details);
+            localTasks.updateSubtaskFromList(details);
+        } else if(direction.includes('remove-subtask')) {
+            offlineService.updateQueue(allQueues.eraseSubtasksQueue, details);
+        } 
 
         return localTasks.getTasks();
     } 
@@ -103,53 +100,28 @@ export const formPath = (userData: object, cb: Function) => {
         .catch(err => swal('Could not submit!', `${err}`, 'error'));
 };
 
-
 // No CUD
 export const collectToDos = async (cb: Function) => {
-    // cb(localTasks.getTasks());
-
-    try {
-        const response = await fetch(`${localHost}/task/all-tasks`);
-        const data = await response.json();
-
-        if(response.status === 500 || response.status === 400 || response.status === 404){
-            throw Error(data.message);
-        } else {
-            localTasks.makeFullList(data);        
-            cb(localTasks.getTasks());
-        }
-    } catch(err){
-        swal('Something went wrong', `${err.message}`, 'error');
-    }
+    if (!navigator.onLine) {
+        cb(localTasks.getTasks());
+    } else {
+        try {
+            const response = await fetch(`${localHost}/task/all-tasks`);
+            const data = await response.json();
     
-};
-
-// To double check
-export const convertSubToMain = async (id: string) => {
-    try {
-        const erasureResponse = await submitCUDInfo(`${localHost}/task/remove-subtask`, { id }, 'erasure');
-        const taskElements = await erasureResponse.json();
-        const { price, name, done, userCookie, lastUpdatedBy } = taskElements;
-
-        const converted = {
-            userCookie, 
-            lastUpdatedBy,
-            name,
-            description: '',
-            type: 'Other',
-            specialInput: {},
-            price,
-            done
-        };
-        return await submitCUDInfo(`${localHost}/task/new-todo`, converted, 'createUpdate');
-    } catch(err) {
-        console.error(err)
+            if(response.status === 500 || response.status === 400 || response.status === 404){
+                throw Error(data.message);
+            } else {
+                localTasks.makeFullList(data);        
+                cb(localTasks.getTasks());
+            }
+        } catch(err){
+            swal('Something went wrong', `${err.message}`, 'error');
+        }
     }
 };
 
 export const eraseTask = async (id: string) => {
-    // localTasks.removeTaskFromList({ id });
-
     try {
         const response = await submitCUDInfo(`${localHost}/task/erase-task`, { id }, 'erasure');
         return response;
@@ -162,8 +134,6 @@ export const updateDoneStatus = async (dataUpdated: {
     id: string, 
     done: boolean
 }) => {
-    // localTasks.updateTaskFromList(dataUpdated);
-
     try {
         const response = await submitCUDInfo(`${localHost}/task/update-task`, dataUpdated, 'createUpdate');
         return response.status;
@@ -178,9 +148,6 @@ export const createSubTask = async (subtask: {
     parentId: String
     price: String
 }) => {
-
-    // localTasks.createSubtaskToList(subtask);
-
     try {
         await submitCUDInfo(`${localHost}/task/new-subtask`, subtask, 'createUpdate');
 
@@ -191,8 +158,6 @@ export const createSubTask = async (subtask: {
 }
 
 export const updateSubTaskDone = async (subtask: Object) => {
-    // localTasks.updateSubtaskFromList(subtask);
-
     try { 
         await submitCUDInfo(`${localHost}/task/update-subtask`, subtask, 'createUpdate');
     }  catch(err) {
@@ -200,6 +165,7 @@ export const updateSubTaskDone = async (subtask: Object) => {
     }
 }
 
+// Not handling localhost yet
 export const getPricesTotal = (taskId: String) => {
     const currentTasks = localTasks.getTasks();
 
@@ -234,7 +200,6 @@ export const getTask = async (taskId: String, userOrigin: String) => {
     }
 }
 
-
 export const editTask = async (task: Object,  cb: Function) => {
     try {
         const response = await fetch(`${localHost}/task/get-task/edit`, {
@@ -255,3 +220,26 @@ export const editTask = async (task: Object,  cb: Function) => {
 
     cb();
 }
+
+export const convertSubToMain = async (id: string) => {
+    try {
+        const erasureResponse = await submitCUDInfo(`${localHost}/task/remove-subtask`, { id }, 'erasure');
+        const taskElements = await erasureResponse.json();
+        const { price, name, done, userCookie, lastUpdatedBy } = taskElements;
+
+        const converted = {
+            userCookie, 
+            lastUpdatedBy,
+            name,
+            description: '',
+            type: 'Other',
+            specialInput: {},
+            price,
+            done
+        };
+
+        return await submitCUDInfo(`${localHost}/task/new-todo`, converted, 'createUpdate');
+    } catch(err) {
+        console.error(err)
+    }
+};
