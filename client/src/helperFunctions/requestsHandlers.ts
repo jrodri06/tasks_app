@@ -224,7 +224,7 @@ export const getPricesTotal = (taskId: String) => {
 
 export const getTask = async (taskId: String, userOrigin: String) => {
     try {
-        const response = await fetch(`${localHost}/task/${taskId}/${userOrigin}`);
+        const response = await fetch(`${localHost}/task/get-task/${taskId}/${userOrigin}`);
         const data = await response.json();
 
         if(response.status === 500 || response.status === 404 || response.status === 400) {
@@ -240,7 +240,7 @@ export const getTask = async (taskId: String, userOrigin: String) => {
 
 export const editTask = async (task: Object,  cb: Function) => {
     try {
-        const response = await fetch(`${localHost}/task/edit`, {
+        const response = await fetch(`${localHost}/task/get-task/edit`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
