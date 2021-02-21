@@ -8,6 +8,7 @@ route.post('/', async (req: Request, res: Response) => {
     const userCookie = req.cookies.tasksListUbi;
 
     const { name, description, type, price, specialInput } = req.body;
+
     const newTodo = new ToDo({
         userCookie,
         lastUpdatedBy: userCookie,

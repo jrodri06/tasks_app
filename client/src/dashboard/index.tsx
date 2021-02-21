@@ -24,7 +24,9 @@ const Dashboard = () => {
     // Drop subtask in Dashboard
     const drop = async (e: React.DragEvent<HTMLElement>) => {
         e.preventDefault();
+        console.log('Dropped in Dasboard');
         const subtaskId = e.dataTransfer.getData('subtask_id');
+        console.log(subtaskId);
 
         if (subtaskId === '') {
             return;
