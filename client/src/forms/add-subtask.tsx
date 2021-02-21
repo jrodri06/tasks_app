@@ -57,7 +57,7 @@ const AddSubtask = () => {
                 <input type="number" name="subTaskPrice" placeholder="Value in SEK" onChange={handleChange} />
             </label>
 
-            <input className="btn" type="submit" value="Add" />
+            <button className="btn" type="submit">Add</button>
         </form>
     )
 }

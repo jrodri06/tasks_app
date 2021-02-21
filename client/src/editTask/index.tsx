@@ -205,7 +205,7 @@ const EditTask = () => {
                 <input type="number" name="toDoPrice" placeholder="Value in SEK" value={ String(task.price) } onChange={handleChange} />
             </label>
 
-            <input className="btn" type="submit" value="Submit" />
+            <button className="btn" type="submit">Submit</button>
         </form>
     )
 };

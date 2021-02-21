@@ -32,7 +32,6 @@ export const offlineService = {
 
         currentQueue.push(payload);
 
-        console.log(currentQueue);
         localStorage.setItem(queue, JSON.stringify(currentQueue));
     },
 

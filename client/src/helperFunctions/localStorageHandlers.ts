@@ -89,7 +89,6 @@ export const localTasks = {
     },
 
     updateSubtaskFromList(subtask: any) {
-        console.log('I have been called');
         const current = this.getTasks();
 
         let parentTask: {

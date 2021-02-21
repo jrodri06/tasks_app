@@ -146,7 +146,7 @@ const CreateToDo = () => {
                 <input type="number" name="toDoPrice" placeholder="Value in SEK" onChange={handleChange} />
             </label>
 
-            <input className="btn" type="submit" value="Create" />
+            <button className="btn" type="submit">Create</button>
         </form>
     )
 };
