@@ -10,9 +10,9 @@ route.get('/:taskId/:userOrigin', async (req: Request, res: Response) => {
 
     // userCookie: userOrigin
     try {
-        const task = await ToDo.findById({ _id: taskId });
+        const task = await ToDo.findOne({ userCookie: userOrigin });
 
-        console.log(userOrigin);
+        console.log(taskId);
         console.log(task);
 
         if(task === null) {
