@@ -135,6 +135,10 @@ const TodoTaskPage = () => {
     };
 
     const copyLink = () => {
+        if(navigator.clipboard === undefined) {
+
+            alert('Test for mobile');
+        }
         const link = window.location.href;
         navigator.clipboard.writeText(link)
             .then(() => swal('Copied!', 'You copied the link successfully', 'success'))

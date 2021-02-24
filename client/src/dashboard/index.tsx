@@ -103,7 +103,7 @@ const Dashboard = () => {
                     <button 
                         onClick={ () => setShowFilterOptions(!showFilterOptions) } 
                         className="filterDropbtn">
-                            Filter
+                            <img src="https://img.icons8.com/ios/50/000000/settings--v1.png" alt="filter icon" width="28px" height="28px" />
                     </button>
 
                     <div className={showFilterOptions ? "dropdown-content show-filter-options" : "dropdown-content"}>
@@ -127,7 +127,9 @@ const Dashboard = () => {
 
                 <h1>Dashboard</h1>
 
-                <button className="addTaskbtn" onClick={changeRoute}>Add Task</button>
+                <button className="addTaskbtn" onClick={changeRoute}>
+                    <img src="https://img.icons8.com/android/24/000000/plus.png" alt="add icon" />
+                </button>
             </header>
 
             <div className="all-tasks">

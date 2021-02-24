@@ -26,6 +26,9 @@ form {
             border-radius: $radius;
             border: 1px;
             background-color: #eee;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
         }
 
         @media all and (max-width: $mobileScreen) {
@@ -49,10 +52,6 @@ form {
         margin: 0;
         width: 100%;
         border: 0;
-
-        input[type="date"] {
-            width: 97%;
-        }
     }
 
     input {
