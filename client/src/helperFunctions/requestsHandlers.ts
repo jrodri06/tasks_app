@@ -142,7 +142,7 @@ export const eraseTask = async (id: string) => {
         const response = await submitCUDInfo(`${localHost}/task/erase-task`, { id }, 'erasure');
         return response;
     } catch(err) {
-        throw Error('Failed to erase the task');
+        throw Error(err.message);
     }
 };
 
@@ -210,7 +210,24 @@ export const convertSubToMain = async (body: { id: string, name: string, price: 
     }
 };
 
-// Not handling localhost yet
+export const editTask = async (task: Object,  cb: Function) => {
+    try {
+        const response = await submitCUDInfo(`${localHost}/task/get-task/edit`, task, 'createUpdate');
+
+        if(response.status === 500 || response.status === 404 || response.status === 400) {
+            throw Error('Could not update');
+        }
+
+        swal('Updated!', 'The task has been updated', 'success');
+    } catch(err) {
+        console.error(err);
+    }
+
+    cb();
+}
+
+
+
 export const getPricesTotal = (taskId: String) => {
     const currentTasks = localTasks.getTasks();
 
@@ -249,22 +266,4 @@ export const getTask = async (taskId: String, userOrigin: String) => {
     } catch(err) {
         console.error(err);
     }
-}
-
-export const editTask = async (task: Object,  cb: Function) => {
-    try {
-        const response = await submitCUDInfo(`${localHost}/task/get-task/edit`, task, 'createUpdate');
-
-        console.log('EDIT TASK HANDLER');
-        console.log(response);
-        if(response.status === 500 || response.status === 404 || response.status === 400) {
-            throw Error('Could not update');
-        }
-
-        swal('Updated!', 'The task has been updated', 'success');
-    } catch(err) {
-        console.error(err);
-    }
-
-    cb();
 }

@@ -1,3 +1,5 @@
+import swal from 'sweetalert';
+
 export const localTasks = {
     getTasks() {
         return JSON.parse(localStorage.getItem('tasks') || '[]');
@@ -18,9 +20,6 @@ export const localTasks = {
         task.userCookie = cookieVal;
         task.lastUpdatedBy = cookieVal;
         task.subtask = [];
-
-        console.log('createTaskToList');
-        console.log(task);
 
         current.push(task);
 
@@ -91,17 +90,23 @@ export const localTasks = {
     }) {
         const current = this.getTasks();
         const parentTask = current.find((task: { _id: string }) => task._id === subtask.parentId);
-        parentTask.subtask.push(subtask);
 
-        const newList = current.map((task: { _id: string }) => {
-            if(task._id === parentTask._id) {
-                return parentTask;
-            } else {
-                return task;
-            }
-        });
-
-        this.makeFullList(newList);
+        if(parentTask === undefined) {
+            swal('Cannot add subtask yet', 'You need to be online to be able to take that action', 'error');
+            throw Error('You need to be online to be able to take that action');
+        } else {
+            parentTask.subtask.push(subtask);
+    
+            const newList = current.map((task: { _id: string }) => {
+                if(task._id === parentTask._id) {
+                    return parentTask;
+                } else {
+                    return task;
+                }
+            });
+    
+            this.makeFullList(newList);
+        }
     },
 
     updateSubtaskFromList(subtask: any) {
@@ -138,6 +143,7 @@ export const localTasks = {
 
         this.makeFullList(newList);
     },
+    
     removeSubtaskFromList(subtask: any) {
         const current = this.getTasks();
 

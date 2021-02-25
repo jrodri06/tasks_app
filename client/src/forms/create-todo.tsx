@@ -14,7 +14,7 @@ interface TodoProps {
         foodProtein?: Number,
         workDeadline?: string
     },
-    price: String,
+    price: String | null,
     done: boolean
 }
 
@@ -24,7 +24,7 @@ const CreateToDo = () => {
         description: '',
         type: 'Other',
         specialInput: {},
-        price: '',
+        price: null,
         done: false
     });
 
