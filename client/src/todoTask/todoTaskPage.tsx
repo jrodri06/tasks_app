@@ -136,8 +136,7 @@ const TodoTaskPage = () => {
 
     const copyLink = () => {
         if(navigator.clipboard === undefined) {
-
-            alert('Test for mobile');
+            swal('Cannot copy', 'To be able to copy please go to the https version of the website', 'error');
         }
         const link = window.location.href;
         navigator.clipboard.writeText(link)

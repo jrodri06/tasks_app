@@ -62,6 +62,12 @@ form {
         border: 1px;
     }
 
+    input[type="date"] {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+    }
+
     .btn {
         background-color: #169adc;
         color: #fff;

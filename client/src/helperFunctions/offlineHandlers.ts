@@ -43,6 +43,13 @@ export const offlineService = {
 //  When back online
 window.addEventListener('online', () => clearQueues());
 
+//  For pending queues left
+window.addEventListener('DOMContentLoaded', () => {
+    if (navigator.onLine) {
+        clearQueues()
+    }
+});
+
 const clearQueues = () => {
     for(let queue in allQueues) {
 

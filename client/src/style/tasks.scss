@@ -23,12 +23,12 @@ $marginBlock: 15px 0 10px;
             input {
                 height: 17px;
                 width: 30px;
-                margin: 0;
+                margin-left: -6px;
             }
         }
         
         .todo-price {
-            text-decoration: underline;
+            font-weight: bold;
             margin: 0 5px;
         }
     }
@@ -95,9 +95,9 @@ $marginBlock: 15px 0 10px;
     }
 
     .taskErasure {
-        color: #b13046;
+        color: #fff;
         border-radius: $radius;
-        background-color: #fceff0;
+        background-color: #b13046;
         border: 0px;
         font-size: 1rem;
         width: 100%;
@@ -120,6 +120,7 @@ $marginBlock: 15px 0 10px;
         border-radius: $radius;
         border: 1px solid;
         background-color: #efefef;
+        margin: 0;
     }
 }
 

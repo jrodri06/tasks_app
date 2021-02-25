@@ -103,7 +103,7 @@ const Dashboard = () => {
                     <button 
                         onClick={ () => setShowFilterOptions(!showFilterOptions) } 
                         className="filterDropbtn">
-                            <img src="https://img.icons8.com/ios/50/000000/settings--v1.png" alt="filter icon" width="28px" height="28px" />
+                            <img src="https://img.icons8.com/ios/50/000000/settings--v1.png" alt="filter icon" width="24px" height="24px" />
                     </button>
 
                     <div className={showFilterOptions ? "dropdown-content show-filter-options" : "dropdown-content"}>

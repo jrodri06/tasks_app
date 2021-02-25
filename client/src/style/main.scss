@@ -4,7 +4,8 @@ $marginElements: 10px 0;
 $mobileScreen: 480px;
 
 body {
-    font-family: Arial, Helvetica, sans-serif;
+    /* font-family: Arial, Helvetica, sans-serif; */
+    font-family: Avenir;
     background-color: #eeeeee;
 
     .App {
@@ -67,6 +68,7 @@ body {
                 font-size: 1rem;
                 font-weight: bold;
                 border: 1px solid;
+                display: flex;
             }
 
             .addTaskbtn {
