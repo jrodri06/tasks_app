@@ -136,7 +136,7 @@ const CreateToDo = () => {
                 toDo.type === 'Work' && 
                     <fieldset>
                         <label>Deadline
-                            <input type="date" className="workDeadline" name="workDeadline" onChange={handleChange} />
+                            <input type="date" className="workDeadline" name="workDeadline" placeholder="yyyy-mm-dd" onChange={handleChange} />
                         </label>
                     </fieldset>
             }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import swal from 'sweetalert';
 
@@ -40,10 +40,37 @@ const TodoTaskPage = () => {
     });
 
     const [deleted, setDeleted] = useState(false);
-    const [cookieOrigin, setCookieOrigin] = useState('');
     const [lastUpdateUser, setLastUpdateUser] = useState('');
 
+    const location: any = useLocation();
+
     useEffect(() => {
+        const renderTask = async () => {
+            let selectedTask;
+            const path = window.location.pathname;
+            const pathDivided = path.split('/');
+            const userOrigin = pathDivided[pathDivided.length - 1];
+    
+            // User from external link needs to fetch task details
+            if(location.state === undefined) {
+                const taskId = pathDivided[pathDivided.length - 2];
+                try {
+                    const response = await getTask(taskId, userOrigin);
+                    selectedTask = response;
+                } catch(err) {
+                    return swal('You are offline', `${err}` , 'error');
+                }   
+            } else {
+                selectedTask = location.state.task
+            }
+    
+            if(selectedTask === undefined) {
+                setDeleted(true);
+            } else {
+                setTask(selectedTask);
+            }
+        };
+
         const checkLastEdit = () => {
             const existingCookies = document.cookie;
             const getVal = existingCookies.split('=');
@@ -63,24 +90,7 @@ const TodoTaskPage = () => {
         renderTask();
         setDeleted(false);
         checkLastEdit();
-    }, [task.lastUpdatedBy]);
-
-    const renderTask = async () => {
-        const path = window.location.pathname;
-        const pathDivided = path.split('/');
-        const taskId = pathDivided[pathDivided.length - 2];
-        const userOrigin = pathDivided[pathDivided.length - 1];
-
-        const selectedTask = await getTask(taskId, userOrigin);
-
-        setCookieOrigin(userOrigin);
-
-        if(selectedTask === undefined) {
-            setDeleted(true);
-        } else {
-            setTask(selectedTask);
-        }
-    };
+    }, [location.state, task.lastUpdatedBy]);
 
     const history = useHistory();
 
@@ -93,7 +103,10 @@ const TodoTaskPage = () => {
     };
 
     const editPage = () => {
-        history.push(`/edit-task/${task._id}/${cookieOrigin}`);
+        history.push({
+            pathname: `/edit-task/${task._id}/${task.userCookie}`,
+            state: { task }
+        });
     }
 
     const updateTask = async (e: React.ChangeEvent<HTMLInputElement>) => {

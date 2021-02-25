@@ -7,22 +7,7 @@ export const localTasks = {
         localStorage.setItem('tasks', JSON.stringify(payload));
     },
 
-    createTaskToList(task: {
-        name: String,
-        description: String,
-        type: String,
-        userCookie: String,
-        lastUpdatedBy: String,
-        subtask: [],
-        specialInput: {
-            fooCarbs?: Number,
-            foodFat?: Number,
-            foodProtein?: Number,
-            workDeadline?: string
-        },
-        price: String,
-        done: boolean
-    }) {
+    createTaskToList(task: any) {
         const current = this.getTasks();
 
         const existingCookies = document.cookie;
@@ -32,8 +17,10 @@ export const localTasks = {
 
         task.userCookie = cookieVal;
         task.lastUpdatedBy = cookieVal;
-        task.lastUpdatedBy = cookieVal;
         task.subtask = [];
+
+        console.log('createTaskToList');
+        console.log(task);
 
         current.push(task);
 
@@ -59,6 +46,35 @@ export const localTasks = {
         const newList = current.map((task: { _id: string }) => {
             if(task._id === taskToUpdate._id) {
                 return taskToUpdate;
+            } else {
+                return task;
+            }
+        });
+
+        this.makeFullList(newList);
+    },
+
+    updateEditedTaskFromList(element: {
+        userCookie: String,
+        lastUpdatedBy: String,
+        name: String,
+        description: String,
+        type: String,
+        specialInput: {
+            fooCarbs?: Number,
+            foodFat?: Number,
+            foodProtein?: Number,
+            workDeadline?: string
+        },
+        price: Number | null,
+        done: boolean,
+        _id: string
+    }) {
+        const current = this.getTasks();
+
+        const newList = current.map((task: { _id: string }) => {
+            if(task._id === element._id) {
+                return element;
             } else {
                 return task;
             }
@@ -109,6 +125,34 @@ export const localTasks = {
                 return sub;
             }
         });
+
+        parentTask.subtask = updatedSubtasks;
+
+        const newList = current.map((task: { _id: string }) => {
+            if(task._id === parentTask._id) {
+                return parentTask;
+            } else {
+                return task;
+            }
+        });
+
+        this.makeFullList(newList);
+    },
+    removeSubtaskFromList(subtask: any) {
+        const current = this.getTasks();
+
+        let parentTask: {
+            description: string,
+            done: boolean,
+            name: string,
+            price: Number,
+            specialInput: Object,
+            subtask: Object[],
+            type: string
+            _id: string
+        } = current.find((task: { _id: string }) => task._id === subtask.parentId);
+
+        const updatedSubtasks = parentTask.subtask.filter((sub: any) => sub._id !== subtask.id);
 
         parentTask.subtask = updatedSubtasks;
 

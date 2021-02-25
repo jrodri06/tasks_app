@@ -6,6 +6,7 @@ export const allQueues = {
     newTasksQueue: 'newTasksQueue',
     eraseTasksQueue: 'eraseTasksQueue',
     updateTasksQueue: 'updateTasksQueue',
+    updateEditedTasksQueue: 'updateEditedTasksQueue',
     newSubtasksQueue: 'newSubtasksQueue',
     eraseSubtasksQueue: 'eraseSubtasksQueue',
     updateSubtasksQueue: 'updateSubtasksQueue'
@@ -19,7 +20,7 @@ export const offlineService = {
     updateQueue(queue: string, payload: any) {
         const currentQueue = this.getQueue(queue);
 
-        if(queue === 'updateTasksQueue') {
+        if(queue === 'updateTasksQueue' || queue === 'updateEditedTasksQueue') {
             const updatedQueue = currentQueue.filter((task: { 
                 done: boolean,
                 id: String
@@ -69,6 +70,10 @@ const clearQueues = () => {
                     pending.forEach(async (task: Object) => await submitCUDInfo(`${localHost}/task/update-task`, task, 'createUpdate'));
                     offlineService.clearQueue(`${queue}`);
                     break;
+                case 'updateEditedTasksQueue':
+                    pending.forEach(async (task: Object) => await submitCUDInfo(`${localHost}/task/get-task/edit`, task, 'createUpdate'));
+                    offlineService.clearQueue(`${queue}`);
+                    break;
                 case 'newSubtasksQueue':
                     pending.forEach(async (subtask: Object) => await submitCUDInfo(`${localHost}/task/new-subtask`, subtask, 'createUpdate'));
                     offlineService.clearQueue(`${queue}`);
@@ -78,7 +83,7 @@ const clearQueues = () => {
                     offlineService.clearQueue(`${queue}`);
                     break;
                 default:
-                    pending.forEach(async (id: Object) => await submitCUDInfo(`${localHost}/task/remove-subtask`, id, 'erasure'));
+                    pending.forEach(async (id: string) => await submitCUDInfo(`${localHost}/task/remove-subtask`, { id }, 'erasure'));
                     offlineService.clearQueue(`${queue}`);
             };
         };

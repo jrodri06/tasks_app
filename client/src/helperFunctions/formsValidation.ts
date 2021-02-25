@@ -47,8 +47,10 @@ export const workTypeValidation = (inputs: SpecialInputs) => {
     } else {
         const currentDate = new Date();
         const dateProvided = new Date(inputs.workDeadline!);
-    
-        if(currentDate.getTime() > dateProvided.getTime()) {
+
+        if(isNaN(dateProvided.getTime())) {
+            swal('Could not submit!', 'Please provide a valid date following the correct format', 'error');
+        } else if(currentDate.getTime() > dateProvided.getTime()) {
             swal('Could not submit!', 'The date provided is prior to today', 'error');
             return false;
         } else {

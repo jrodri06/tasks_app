@@ -17,6 +17,7 @@ type ToDoProps = {
     displayDone?: string 
     price: Number
     userCookie: String
+    lastUpdatedBy: string
     childUpdate: React.Dispatch<React.SetStateAction<object>>
     subtask: []
 }
@@ -29,6 +30,7 @@ const ToDo: FunctionComponent<ToDoProps> = ({
     type,
     specialInput,
     userCookie,
+    lastUpdatedBy,
     price,
     childUpdate,
     displayDone,
@@ -43,7 +45,21 @@ const ToDo: FunctionComponent<ToDoProps> = ({
 
     const editPage = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.stopPropagation();
-        history.push(`/edit-task/${id}/${userCookie}`);
+
+        history.push({
+            pathname: `/edit-task/${id}/${userCookie}`,
+            state: { task: {
+                _id: id,
+                name,
+                done,
+                description,
+                type,
+                specialInput,
+                userCookie,
+                lastUpdatedBy,
+                price
+            }}
+        })
     }
 
     const blockPropagation = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
@@ -107,7 +123,21 @@ const ToDo: FunctionComponent<ToDoProps> = ({
     };
 
     const taskPage = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        history.push(`/task/${id}/${userCookie}`);
+        history.push({
+            pathname: `/task/${id}/${userCookie}`,
+            state: { task: {
+                _id: id,
+                name,
+                done,
+                description,
+                type,
+                specialInput,
+                userCookie,
+                lastUpdatedBy,
+                price,
+                subtask
+            }}
+        })
     };
 
     return (

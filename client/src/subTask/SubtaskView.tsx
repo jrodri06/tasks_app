@@ -31,7 +31,24 @@ const SubtaskView: FunctionComponent<SubtaskViewProps> = ({
 
     const dragStart = (e: any) => {
         const target = e.target!;
-        e.dataTransfer.setData('subtask_id', target.id );
+        const name = target.querySelector('.subTasks-name').textContent;
+
+        let price;
+        if(target.querySelector('.subTasks-price') !== null) {
+            const priceString = target.querySelector('.subTasks-price').textContent;
+            price = +priceString.substring(0, priceString.length - 2);
+        } else {
+            price = null;
+        }
+
+        const subtaskBody = { 
+            id: target.id, 
+            name, 
+            price,
+            parentId
+        };
+            
+        e.dataTransfer.setData('subtask_body', JSON.stringify(subtaskBody));
     };
 
     const blockPropagation = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {

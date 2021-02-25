@@ -1,7 +1,7 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
-import { getTask, editTask } from '../helperFunctions/requestsHandlers';
+import { editTask } from '../helperFunctions/requestsHandlers';
 import { foodTypeValidation, workTypeValidation, emptyFields } from '../helperFunctions/formsValidation';
 
 interface TodoProps {
@@ -21,13 +21,18 @@ interface TodoProps {
     _id: string
 }
 
-interface ParamTypes {
-    taskId: string
-}
-
 const EditTask = () => {
-    const { taskId } = useParams<ParamTypes>();
     const history = useHistory();
+
+    const backToDashboard = () =>{
+        history.push('/');
+    };
+
+    const location: { 
+        state: { 
+            task: object 
+        } 
+    } = useLocation();
 
     const [task, setTask] = useState<Partial<TodoProps>>({
         userCookie: '',
@@ -44,27 +49,15 @@ const EditTask = () => {
     const [userCookie, setUserCookie] = useState('');
 
     useEffect(() => {
-        const path = window.location.pathname;
-        const pathDivided = path.split('/');
-        const userOrigin = pathDivided[pathDivided.length - 1];
-
+        // Get current user cookie
         const existingCookies = document.cookie;
         const getVal = existingCookies.split('=');
         const name = getVal[getVal.length - 2];
         const cookieVal = name === 'tasksListUbi' ? getVal[getVal.length - 1] : '';
         setUserCookie(cookieVal);
 
-        const fetchTask = async () => {
-            const taskToEdit: any = await getTask(taskId, userOrigin);
-            setTask(taskToEdit);
-        };
-        
-        fetchTask();
+        setTask(location.state.task);
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
-    const backToDashboard = () =>{
-        history.push('/');
-    };
 
     const handleChange = (userInput: ChangeEvent) => {
         const inputInfo = userInput.target as HTMLInputElement;
@@ -195,7 +188,13 @@ const EditTask = () => {
                 task.type === 'Work' && 
                     <fieldset>
                         <label>Deadline
-                            <input type="date" className="workDeadline" name="workDeadline" value={ String(task.specialInput?.workDeadline) } onChange={handleChange} />
+                            <input 
+                                type="date" 
+                                className="workDeadline" 
+                                name="workDeadline" 
+                                placeholder="yyyy-mm-dd" 
+                                value={ task.specialInput?.workDeadline !== undefined ? String(task.specialInput?.workDeadline) : ''} 
+                                onChange={handleChange} />
                         </label>
                     </fieldset>
             }

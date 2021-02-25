@@ -32,8 +32,24 @@ const handlePostWhenOffline = async (
             offlineService.updateQueue(allQueues.updateSubtasksQueue, details);
             localTasks.updateSubtaskFromList(details);
         } else if(direction.includes('remove-subtask')) {
-            offlineService.updateQueue(allQueues.eraseSubtasksQueue, details);
-        } 
+            const newTask = {
+                name: details.name, 
+                description: "", 
+                type: "Other", 
+                specialInput: {}, 
+                price: details.price, 
+                done: false
+            };
+
+            offlineService.updateQueue(allQueues.eraseSubtasksQueue, details.id);
+            offlineService.updateQueue(allQueues.newTasksQueue, newTask);
+
+            localTasks.removeSubtaskFromList(details);
+            localTasks.createTaskToList(newTask);
+        } else if (direction.includes('edit')) { 
+            offlineService.updateQueue(allQueues.updateEditedTasksQueue, details);
+            localTasks.updateEditedTaskFromList(details);
+        }
 
         return localTasks.getTasks();
     } 
@@ -165,6 +181,35 @@ export const updateSubTaskDone = async (subtask: Object) => {
     }
 }
 
+export const convertSubToMain = async (body: { id: string, name: string, price: null | number }) => {
+    try {
+        const erasureResponse = await submitCUDInfo(`${localHost}/task/remove-subtask`, body, 'erasure');
+        
+        // Server Response
+        if(erasureResponse.headers !== undefined) {
+            const taskElements = await erasureResponse.json();
+            const { price, name, done, userCookie, lastUpdatedBy } = taskElements;
+    
+            const converted = {
+                userCookie, 
+                lastUpdatedBy,
+                name,
+                description: '',
+                type: 'Other',
+                specialInput: {},
+                price,
+                done
+            };
+    
+            return await submitCUDInfo(`${localHost}/task/new-todo`, converted, 'createUpdate');
+        } else {
+            return;
+        }
+    } catch(err) {
+        console.error(err)
+    }
+};
+
 // Not handling localhost yet
 export const getPricesTotal = (taskId: String) => {
     const currentTasks = localTasks.getTasks();
@@ -185,7 +230,13 @@ export const getPricesTotal = (taskId: String) => {
     }
 }
 
+// Task from another user
+// Online required
 export const getTask = async (taskId: String, userOrigin: String) => {
+    if (!navigator.onLine) {
+        throw Error('You need to be online so we can deliver the data to you');
+    }
+
     try {
         const response = await fetch(`${localHost}/task/get-task/${taskId}/${userOrigin}`);
         const data = await response.json();
@@ -202,17 +253,14 @@ export const getTask = async (taskId: String, userOrigin: String) => {
 
 export const editTask = async (task: Object,  cb: Function) => {
     try {
-        const response = await fetch(`${localHost}/task/get-task/edit`, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(task)
-        });
+        const response = await submitCUDInfo(`${localHost}/task/get-task/edit`, task, 'createUpdate');
 
+        console.log('EDIT TASK HANDLER');
+        console.log(response);
         if(response.status === 500 || response.status === 404 || response.status === 400) {
             throw Error('Could not update');
         }
+
         swal('Updated!', 'The task has been updated', 'success');
     } catch(err) {
         console.error(err);
@@ -220,26 +268,3 @@ export const editTask = async (task: Object,  cb: Function) => {
 
     cb();
 }
-
-export const convertSubToMain = async (id: string) => {
-    try {
-        const erasureResponse = await submitCUDInfo(`${localHost}/task/remove-subtask`, { id }, 'erasure');
-        const taskElements = await erasureResponse.json();
-        const { price, name, done, userCookie, lastUpdatedBy } = taskElements;
-
-        const converted = {
-            userCookie, 
-            lastUpdatedBy,
-            name,
-            description: '',
-            type: 'Other',
-            specialInput: {},
-            price,
-            done
-        };
-
-        return await submitCUDInfo(`${localHost}/task/new-todo`, converted, 'createUpdate');
-    } catch(err) {
-        console.error(err)
-    }
-};
