@@ -19,8 +19,17 @@ const AddSubtask = () => {
     });
 
     const history = useHistory();
+
     const backToDashboard = () =>{
-        history.push('/');
+        history.listen((location, action) => {
+            if (action === 'POP') {
+              console.log('POP');
+              console.log(location);
+              console.log(action);
+            }
+        })
+
+        history.goBack();
     };
 
     const handleChange = (userInput: ChangeEvent) => {
