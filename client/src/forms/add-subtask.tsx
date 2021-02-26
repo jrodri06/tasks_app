@@ -41,9 +41,10 @@ const AddSubtask = () => {
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
+
+        createSubTask(subTask);
         localTasks.createSubtaskToList(subTask);
         
-        createSubTask(subTask);
         backToDashboard();
     };
 

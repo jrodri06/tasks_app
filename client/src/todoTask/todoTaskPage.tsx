@@ -54,7 +54,9 @@ const TodoTaskPage = () => {
             const path = window.location.pathname;
             const pathDivided = path.split('/');
             const userOrigin = pathDivided[pathDivided.length - 1];
-    
+
+            console.log('TodoTaskPage');
+            console.log(location.state);
             // User from external link needs to fetch task details
             if(location.state === undefined) {
                 const tempId = pathDivided[pathDivided.length - 2];
