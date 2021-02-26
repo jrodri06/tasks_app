@@ -4,17 +4,18 @@ import { useHistory, useParams } from 'react-router-dom';
 import { createSubTask } from '../helperFunctions/requestsHandlers';
 
 interface ParamTypes {
-    parentId: string
+    parentTempId: string
 }
 
 const AddSubtask = () => {
-    const { parentId } = useParams<ParamTypes>();
+    const { parentTempId } = useParams<ParamTypes>();
 
     const [subTask, setSubTask] = useState({
-        parentId,
+        parentTempId,
         name: '',
         price: '',
-        done: false
+        done: false,
+        subtaskTempId: `${parentTempId}${new Date().getTime()}`
     });
 
     const history = useHistory();

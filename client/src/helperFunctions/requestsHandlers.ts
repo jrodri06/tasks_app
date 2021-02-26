@@ -38,10 +38,11 @@ const handlePostWhenOffline = async (
                 type: "Other", 
                 specialInput: {}, 
                 price: details.price, 
+                tempIdentifier: details.subtaskTempId,
                 done: false
             };
 
-            offlineService.updateQueue(allQueues.eraseSubtasksQueue, details.id);
+            offlineService.updateQueue(allQueues.eraseSubtasksQueue, details.subtaskTempId);
             offlineService.updateQueue(allQueues.newTasksQueue, newTask);
 
             localTasks.removeSubtaskFromList(details);
@@ -137,9 +138,9 @@ export const collectToDos = async (cb: Function) => {
     }
 };
 
-export const eraseTask = async (id: string) => {
+export const eraseTask = async (id: string, tempIdentifier: string) => {
     try {
-        const response = await submitCUDInfo(`${localHost}/task/erase-task`, { id }, 'erasure');
+        const response = await submitCUDInfo(`${localHost}/task/erase-task`, { id, tempIdentifier }, 'erasure');
         return response;
     } catch(err) {
         throw Error(err.message);
@@ -148,7 +149,8 @@ export const eraseTask = async (id: string) => {
 
 export const updateDoneStatus = async (dataUpdated: { 
     id: string, 
-    done: boolean
+    done: boolean,
+    tempIdentifier: string
 }) => {
     try {
         const response = await submitCUDInfo(`${localHost}/task/update-task`, dataUpdated, 'createUpdate');
@@ -160,9 +162,10 @@ export const updateDoneStatus = async (dataUpdated: {
 
 export const createSubTask = async (subtask: { 
     done: boolean
-    name: String
-    parentId: String
-    price: String
+    name: string
+    parentTempId: string
+    subtaskTempId: string
+    price: string
 }) => {
     try {
         await submitCUDInfo(`${localHost}/task/new-subtask`, subtask, 'createUpdate');
@@ -181,7 +184,7 @@ export const updateSubTaskDone = async (subtask: Object) => {
     }
 }
 
-export const convertSubToMain = async (body: { id: string, name: string, price: null | number }) => {
+export const convertSubToMain = async (body: { subtaskTempId: string, name: string, price: null | number }) => {
     try {
         const erasureResponse = await submitCUDInfo(`${localHost}/task/remove-subtask`, body, 'erasure');
         
@@ -198,6 +201,7 @@ export const convertSubToMain = async (body: { id: string, name: string, price: 
                 type: 'Other',
                 specialInput: {},
                 price,
+                tempIdentifier: `${userCookie}${new Date().getTime()}`,
                 done
             };
     
@@ -228,10 +232,10 @@ export const editTask = async (task: Object,  cb: Function) => {
 
 
 
-export const getPricesTotal = (taskId: String) => {
+export const getPricesTotal = (tempIdentifier: String) => {
     const currentTasks = localTasks.getTasks();
 
-    const selectedTask = currentTasks.find((task: { _id: string }) => task._id === taskId);
+    const selectedTask = currentTasks.find((task: { tempIdentifier: string }) => task.tempIdentifier === tempIdentifier);
     let totalPrice = 0;
 
     if(selectedTask === undefined) {

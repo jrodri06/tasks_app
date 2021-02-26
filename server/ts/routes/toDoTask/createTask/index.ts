@@ -9,7 +9,7 @@ route.post('/', async (req: Request, res: Response) => {
             'thisIsJustForTesting' : 
             req.cookies.tasksListUbi;
 
-    const { name, description, type, price, specialInput } = req.body;
+    const { name, description, type, price, specialInput, tempIdentifier } = req.body;
 
     const newTodo = new ToDo({
         userCookie,
@@ -18,7 +18,8 @@ route.post('/', async (req: Request, res: Response) => {
         description, 
         type, 
         price, 
-        specialInput
+        specialInput,
+        tempIdentifier
     })
 
     try {

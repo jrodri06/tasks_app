@@ -1,16 +1,15 @@
-import swal from 'sweetalert';
 import { submitCUDInfo } from './requestsHandlers';
 
 const localHost = process.env.NODE_ENV === 'development' ? 'http://localhost:4001' : '';
 
 export const allQueues = {
     newTasksQueue: 'newTasksQueue',
-    eraseTasksQueue: 'eraseTasksQueue',
+    newSubtasksQueue: 'newSubtasksQueue',
     updateTasksQueue: 'updateTasksQueue',
     updateEditedTasksQueue: 'updateEditedTasksQueue',
-    newSubtasksQueue: 'newSubtasksQueue',
-    eraseSubtasksQueue: 'eraseSubtasksQueue',
-    updateSubtasksQueue: 'updateSubtasksQueue'
+    updateSubtasksQueue: 'updateSubtasksQueue',
+    eraseTasksQueue: 'eraseTasksQueue',
+    eraseSubtasksQueue: 'eraseSubtasksQueue'
 };
 
 export const offlineService = {
@@ -21,20 +20,11 @@ export const offlineService = {
     updateQueue(queue: string, payload: any) {
         const currentQueue = this.getQueue(queue);
 
-        if(queue === 'eraseTasksQueue') {
-            // For tasks that are in queue but not yet in database
-            if(payload.id === undefined) {
-                swal('Could not delete', 'Try again when you are back online', 'error');
-                throw Error('You need to be online to be able to take that action');
-            } else {
-                currentQueue.push(payload);
-                localStorage.setItem(queue, JSON.stringify(currentQueue));
-            }
-        } else if(queue === 'updateTasksQueue' || queue === 'updateEditedTasksQueue') {
+        if(queue === 'updateTasksQueue' || queue === 'updateEditedTasksQueue') {
             const updatedQueue = currentQueue.filter((task: { 
                 done: boolean,
-                id: String
-            }) => task.id !== payload.id)
+                tempIdentifier: string
+            }) => task.tempIdentifier !== payload.tempIdentifier)
 
             updatedQueue.push(payload);
             localStorage.setItem(queue, JSON.stringify(updatedQueue));
@@ -59,7 +49,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-const clearQueues = () => {
+const clearQueues = async () => {
     for(let queue in allQueues) {
 
         const pending = offlineService.getQueue(`${queue}`);
@@ -67,31 +57,45 @@ const clearQueues = () => {
         if(pending.length > 0) {
             switch(`${queue}`){
                 case 'newTasksQueue':
-                    pending.forEach(async (task: Object) => await submitCUDInfo(`${localHost}/task/new-todo`, task, 'createUpdate'));
+                    for(let task of pending) {
+                        await submitCUDInfo(`${localHost}/task/new-todo`, task, 'createUpdate');
+                    }
                     offlineService.clearQueue(`${queue}`);
                     break;
                 case 'newSubtasksQueue':
-                    pending.forEach(async (subtask: Object) => await submitCUDInfo(`${localHost}/task/new-subtask`, subtask, 'createUpdate'));
+                    for(let subtask of pending) {
+                        await submitCUDInfo(`${localHost}/task/new-subtask`, subtask, 'createUpdate');
+                    }
                     offlineService.clearQueue(`${queue}`);
                     break;
                 case 'updateTasksQueue':
-                    pending.forEach(async (task: Object) => await submitCUDInfo(`${localHost}/task/update-task`, task, 'createUpdate'));
+                    for(let task of pending) {
+                        await submitCUDInfo(`${localHost}/task/update-task`, task, 'createUpdate');
+                    }
                     offlineService.clearQueue(`${queue}`);
                     break;
                 case 'updateEditedTasksQueue':
-                    pending.forEach(async (task: Object) => await submitCUDInfo(`${localHost}/task/get-task/edit`, task, 'createUpdate'));
+                    for(let task of pending) {
+                        await submitCUDInfo(`${localHost}/task/get-task/edit`, task, 'createUpdate')
+                    }
                     offlineService.clearQueue(`${queue}`);
                     break;
                 case 'updateSubtasksQueue':
-                    pending.forEach(async (subtask: Object) => await submitCUDInfo(`${localHost}/task/update-subtask`, subtask, 'createUpdate'));
+                    for(let subtask of pending) {
+                        await submitCUDInfo(`${localHost}/task/update-subtask`, subtask, 'createUpdate');
+                    }
                     offlineService.clearQueue(`${queue}`);
                     break;
                 case 'eraseTasksQueue':
-                    pending.forEach(async (task: { id: string }) => await submitCUDInfo(`${localHost}/task/erase-task`, task, 'erasure'));
+                    for(let task of pending) {
+                        await submitCUDInfo(`${localHost}/task/erase-task`, task, 'erasure');
+                    }
                     offlineService.clearQueue(`${queue}`);
                     break;
                 default:
-                    pending.forEach(async (id: string) => await submitCUDInfo(`${localHost}/task/remove-subtask`, { id }, 'erasure'));
+                    for(let subtaskTempId of pending) {
+                        await submitCUDInfo(`${localHost}/task/remove-subtask`, { subtaskTempId }, 'erasure');
+                    }
                     offlineService.clearQueue(`${queue}`);
             };
         };

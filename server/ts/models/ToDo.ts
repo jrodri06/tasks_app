@@ -1,4 +1,16 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Document } from 'mongoose';
+
+export interface ToDo extends Document {
+  userCookie: string,
+  lastUpdatedBy: string,
+  name: string,
+  description: string,
+  type: string,
+  price: number,
+  done: boolean,
+  specialInput: object,
+  tempIdentifier: string
+}
 
 const toDoSchema = new Schema({
   userCookie: {
@@ -39,12 +51,16 @@ const toDoSchema = new Schema({
     type: Boolean,
     default: false
   }, 
-  specialInput:  {
+  specialInput: {
     type: Object,
+    required: true
+  },
+  tempIdentifier: {
+    type: String,
     required: true
   }
 }, { 
   minimize: false 
 });
 
-export default model('ToDo', toDoSchema);
+export default model<ToDo>('ToDo', toDoSchema);

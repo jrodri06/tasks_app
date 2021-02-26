@@ -1,31 +1,36 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { getUserCookie } from '../helperFunctions/getCookie';
 import { formPath } from '../helperFunctions/requestsHandlers';
 import { foodTypeValidation, workTypeValidation, emptyFields } from '../helperFunctions/formsValidation';
 
 interface TodoProps {
-    name: String,
-    description: String,
-    type: String,
+    name: string,
+    description: string,
+    type: string,
     specialInput: {
-        fooCarbs?: Number,
-        foodFat?: Number,
-        foodProtein?: Number,
+        fooCarbs?: number,
+        foodFat?: number,
+        foodProtein?: number,
         workDeadline?: string
     },
-    price: String | null,
-    done: boolean
+    price: string | null,
+    done: boolean,
+    tempIdentifier: string 
 }
 
 const CreateToDo = () => {
+    const cookieVal = getUserCookie();
+    
     const [toDo, setToDo] = useState<Partial<TodoProps>>({
         name: '',
         description: '',
         type: 'Other',
         specialInput: {},
         price: null,
-        done: false
+        done: false,
+        tempIdentifier: `${cookieVal}${new Date().getTime()}`
     });
 
     const history = useHistory();

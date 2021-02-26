@@ -11,19 +11,34 @@ route.post('/', async (req: Request, res: Response) => {
     if(req.headers['x-http-method-override']  === 'DELETE') {
 
         try {
-            const { id } = req.body;
+            const { id, tempIdentifier } = req.body;
 
-            const originalUser = process.env.NODE_ENV === 'development' ? 
-                await ToDo.findOne({  _id: id }) :
-                await ToDo.findOne({  _id: id, userCookie });
+            if(id === undefined) {
+                const originalUser = process.env.NODE_ENV === 'development' ? 
+                    await ToDo.findOne({ tempIdentifier }) :
+                    await ToDo.findOne({ tempIdentifier, userCookie });
 
-            if(originalUser === null) {
-                throw Error('You are not the original creator of this task so you cannot delete it');
+                if(originalUser === null) {
+                    throw Error('You are not the original creator of this task so you cannot delete it');
+                } else {
+                    await ToDo.deleteOne({ tempIdentifier });
+                    await Subtask.deleteMany({ parentTempId: tempIdentifier });
+
+                    res.status(202).json({ message: `Successfully deleted` });
+                }
             } else {
-                await ToDo.deleteOne({ _id: id });
-                await Subtask.deleteMany({ parentId: id });
+                const originalUser = process.env.NODE_ENV === 'development' ? 
+                    await ToDo.findOne({  _id: id }) :
+                    await ToDo.findOne({  _id: id, userCookie });
 
-                res.status(202).json({ message: `Successfully deleted` });
+                if(originalUser === null) {
+                    throw Error('You are not the original creator of this task so you cannot delete it');
+                } else {
+                    await ToDo.deleteOne({ _id: id });
+                    await Subtask.deleteMany({ parentId: id });
+    
+                    res.status(202).json({ message: `Successfully deleted` });
+                }
             }
         } catch(err) {
             console.error(err);

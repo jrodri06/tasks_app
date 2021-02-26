@@ -24,11 +24,9 @@ const Dashboard = () => {
     // Drop subtask in Dashboard
     const drop = async (e: React.DragEvent<HTMLElement>) => {
         e.preventDefault();
-        console.log('droped')
         const subtaskBody = JSON.parse(e.dataTransfer.getData('subtask_body'));
-        console.log(subtaskBody)
 
-        if (subtaskBody.id === '') {
+        if (subtaskBody.subtaskTempId === '') {
             swal('Something went wrong', 'You might be offline, please try again', 'error');
         } else {
             const response = await convertSubToMain(subtaskBody);
@@ -61,6 +59,7 @@ const Dashboard = () => {
                 price: Number, 
                 userCookie: String,
                 lastUpdatedBy: string,
+                tempIdentifier: string,
                 subtask: []
             }) => todo.done
         );
@@ -79,6 +78,7 @@ const Dashboard = () => {
                     price: Number, 
                     userCookie: String,
                     lastUpdatedBy: string,
+                    tempIdentifier: string,
                     subtask: []
                 }) => (<ToDo 
                         key={todo._id || `${Math.random()}`}
@@ -92,6 +92,7 @@ const Dashboard = () => {
                         childUpdate={setChildUpdate}
                         userCookie={todo.userCookie}
                         lastUpdatedBy={todo.lastUpdatedBy}
+                        tempIdentifier={todo.tempIdentifier}
                         subtask={todo.subtask}
                         displayDone="filtered-display"
                     />)
@@ -150,6 +151,7 @@ const Dashboard = () => {
                         specialInput: Object,
                         price: Number, 
                         userCookie: String,
+                        tempIdentifier: string,
                         lastUpdatedBy: string,
                         subtask: []
                     }) => (<ToDo 
@@ -164,6 +166,7 @@ const Dashboard = () => {
                             childUpdate={setChildUpdate}
                             userCookie={todo.userCookie}
                             lastUpdatedBy={todo.lastUpdatedBy}
+                            tempIdentifier={todo.tempIdentifier}
                             subtask={todo.subtask}
                         />)
                     )  

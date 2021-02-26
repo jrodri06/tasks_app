@@ -18,6 +18,7 @@ type ToDoProps = {
     price: Number
     userCookie: String
     lastUpdatedBy: string
+    tempIdentifier: string
     childUpdate: React.Dispatch<React.SetStateAction<object>>
     subtask: []
 }
@@ -32,6 +33,7 @@ const ToDo: FunctionComponent<ToDoProps> = ({
     userCookie,
     lastUpdatedBy,
     price,
+    tempIdentifier,
     childUpdate,
     displayDone,
     subtask
@@ -40,7 +42,7 @@ const ToDo: FunctionComponent<ToDoProps> = ({
     const history = useHistory();
     const handleRedirect = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.stopPropagation();
-        history.push(`/add-subtask/${id}`);
+        history.push(`/add-subtask/${tempIdentifier}`);
     };
 
     const editPage = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -57,7 +59,9 @@ const ToDo: FunctionComponent<ToDoProps> = ({
                 specialInput,
                 userCookie,
                 lastUpdatedBy,
-                price
+                price,
+                tempIdentifier,
+                subtask
             }}
         })
     }
@@ -78,7 +82,8 @@ const ToDo: FunctionComponent<ToDoProps> = ({
         setTimeout(async () => {
             await updateDoneStatus({ 
                 id,
-                done: checked
+                done: checked,
+                tempIdentifier
             });
     
             childUpdate({
@@ -103,7 +108,7 @@ const ToDo: FunctionComponent<ToDoProps> = ({
         })
             .then(async (willDelete) => {
                 if (willDelete) {
-                    await eraseTask(id);
+                    await eraseTask(id, tempIdentifier);
 
                     childUpdate({
                         updateType: 'Erasure',
@@ -135,6 +140,7 @@ const ToDo: FunctionComponent<ToDoProps> = ({
                 userCookie,
                 lastUpdatedBy,
                 price,
+                tempIdentifier,
                 subtask
             }}
         })
@@ -180,7 +186,7 @@ const ToDo: FunctionComponent<ToDoProps> = ({
                 </span> 
                 { subtask !== undefined && subtask.length > 0 && <Subtask 
                     subtasks={subtask} 
-                    subTaskTotalPrice={getPricesTotal(id)}
+                    subTaskTotalPrice={getPricesTotal(tempIdentifier)}
                 /> }
             </div>
 

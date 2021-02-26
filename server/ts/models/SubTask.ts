@@ -1,7 +1,13 @@
 import { Schema, model } from 'mongoose';
 
 const subTask = new Schema({
-    parentId: {
+    parentTempId: {
+        type: String,
+        required: true,
+        min: 1,
+        max: 110
+    },
+    subtaskTempId: {
         type: String,
         required: true,
         min: 1,

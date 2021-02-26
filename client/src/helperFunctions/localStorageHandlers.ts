@@ -1,4 +1,4 @@
-import swal from 'sweetalert';
+import { getUserCookie } from './getCookie';
 
 export const localTasks = {
     getTasks() {
@@ -11,11 +11,7 @@ export const localTasks = {
 
     createTaskToList(task: any) {
         const current = this.getTasks();
-
-        const existingCookies = document.cookie;
-        const getVal = existingCookies.split('=');
-        const name = getVal[getVal.length - 2];
-        const cookieVal = name === 'tasksListUbi' ? getVal[getVal.length - 1] : '';
+        const cookieVal = getUserCookie();
 
         task.userCookie = cookieVal;
         task.lastUpdatedBy = cookieVal;
@@ -28,22 +24,23 @@ export const localTasks = {
 
     removeTaskFromList(element: { id: string }) {
         const current = this.getTasks();
-        const newList = current.filter((task: { _id: string }) => task._id !== element.id);
+        const newList = current.filter((task: { tempIdentifier: string }) => task.tempIdentifier !== element.id);
 
         this.makeFullList(newList);
     },
 
     updateTaskFromList(element: { 
         id: string, 
+        tempIdentifier: string,
         done: boolean 
     }) {
         const current = this.getTasks();
-        let taskToUpdate = current.find((task: { _id: string }) => task._id === element.id);
+        let taskToUpdate = current.find((task: { tempIdentifier: string }) => task.tempIdentifier === element.tempIdentifier);
 
         taskToUpdate = { ...taskToUpdate, done: element.done };
 
-        const newList = current.map((task: { _id: string }) => {
-            if(task._id === taskToUpdate._id) {
+        const newList = current.map((task: { tempIdentifier: string }) => {
+            if(task.tempIdentifier === taskToUpdate.tempIdentifier) {
                 return taskToUpdate;
             } else {
                 return task;
@@ -51,28 +48,43 @@ export const localTasks = {
         });
 
         this.makeFullList(newList);
+
+        const updatedByEdit = JSON.parse(localStorage.getItem('updateEditedTasksQueue') || '[]');
+        // Tasks edited
+        if(updatedByEdit.length > 0) {
+            const editedTaskListUpdated = updatedByEdit.map((task: { tempIdentifier: string }) => {
+                if(task.tempIdentifier === element.tempIdentifier) {
+                    return { ...task, done: element.done }
+                } else {
+                    return task;
+                }
+            });
+
+            localStorage.setItem('updateEditedTasksQueue', JSON.stringify(editedTaskListUpdated));
+        }
     },
 
     updateEditedTaskFromList(element: {
-        userCookie: String,
-        lastUpdatedBy: String,
-        name: String,
-        description: String,
-        type: String,
+        userCookie: string,
+        lastUpdatedBy: string,
+        name: string,
+        description: string,
+        type: string,
         specialInput: {
-            fooCarbs?: Number,
-            foodFat?: Number,
-            foodProtein?: Number,
+            fooCarbs?: number,
+            foodFat?: number,
+            foodProtein?: number,
             workDeadline?: string
         },
-        price: Number | null,
+        price: number | null,
+        tempIdentifier: string,
         done: boolean,
         _id: string
     }) {
         const current = this.getTasks();
 
-        const newList = current.map((task: { _id: string }) => {
-            if(task._id === element._id) {
+        const newList = current.map((task: { tempIdentifier: string }) => {
+            if(task.tempIdentifier === element.tempIdentifier) {
                 return element;
             } else {
                 return task;
@@ -84,29 +96,18 @@ export const localTasks = {
 
     createSubtaskToList(subtask: { 
         done: boolean
-        name: String
-        parentId: String
-        price: String
+        name: string
+        parentTempId: string
+        subtaskTempId: string
+        price: string
     }) {
         const current = this.getTasks();
-        const parentTask = current.find((task: { _id: string }) => task._id === subtask.parentId);
 
-        if(parentTask === undefined) {
-            swal('Cannot add subtask yet', 'You need to be online to be able to take that action', 'error');
-            throw Error('You need to be online to be able to take that action');
-        } else {
-            parentTask.subtask.push(subtask);
-    
-            const newList = current.map((task: { _id: string }) => {
-                if(task._id === parentTask._id) {
-                    return parentTask;
-                } else {
-                    return task;
-                }
-            });
-    
-            this.makeFullList(newList);
-        }
+        const parentTask = current.find((task: { tempIdentifier: string }) => task.tempIdentifier === subtask.parentTempId);
+        parentTask.subtask.push(subtask);
+
+        const newList = newListSub(current, parentTask);
+        this.makeFullList(newList);
     },
 
     updateSubtaskFromList(subtask: any) {
@@ -116,31 +117,23 @@ export const localTasks = {
             description: string,
             done: boolean,
             name: string,
-            price: Number,
-            specialInput: Object,
-            subtask: Object[],
+            price: number,
+            specialInput: object,
+            subtask: object[],
+            tempIdentifier: string,
             type: string
-            _id: string
-        } = current.find((task: { _id: string }) => task._id === subtask.parentId);
+        } = current.find((task: { tempIdentifier: string }) => task.tempIdentifier === subtask.parentTempId);
 
         const updatedSubtasks = parentTask.subtask.map((sub: any) => {
-            if(sub._id === subtask.taskId) {
+            if(sub.subtaskTempId === subtask.subtaskTempId) {
                 return { ...sub, done: subtask.done };
             } else {
                 return sub;
             }
         });
-
         parentTask.subtask = updatedSubtasks;
 
-        const newList = current.map((task: { _id: string }) => {
-            if(task._id === parentTask._id) {
-                return parentTask;
-            } else {
-                return task;
-            }
-        });
-
+        const newList = newListSub(current, parentTask);
         this.makeFullList(newList);
     },
     
@@ -151,25 +144,17 @@ export const localTasks = {
             description: string,
             done: boolean,
             name: string,
-            price: Number,
-            specialInput: Object,
-            subtask: Object[],
+            price: number,
+            specialInput: object,
+            subtask: object[],
             type: string
-            _id: string
-        } = current.find((task: { _id: string }) => task._id === subtask.parentId);
+            tempIdentifier: string
+        } = current.find((task: { tempIdentifier: string }) => task.tempIdentifier === subtask.parentTempId);
 
-        const updatedSubtasks = parentTask.subtask.filter((sub: any) => sub._id !== subtask.id);
-
+        const updatedSubtasks = parentTask.subtask.filter((sub: any) => sub.subtaskTempId !== subtask.subtaskTempId);
         parentTask.subtask = updatedSubtasks;
 
-        const newList = current.map((task: { _id: string }) => {
-            if(task._id === parentTask._id) {
-                return parentTask;
-            } else {
-                return task;
-            }
-        });
-
+        const newList = newListSub(current, parentTask);
         this.makeFullList(newList);
     },
 
@@ -177,3 +162,23 @@ export const localTasks = {
         localStorage.removeItem('tasks');
     }
 }
+
+const newListSub = (
+    current: { tempIdentifier: string }[], 
+    parentTask: {
+        description: string,
+        done: boolean,
+        name: string,
+        price: number,
+        specialInput: object,
+        subtask: object[],
+        tempIdentifier: string,
+        type: string
+    }
+) => current.map((task: { tempIdentifier: string }) => {
+    if(task.tempIdentifier === parentTask.tempIdentifier) {
+        return parentTask;
+    } else {
+        return task;
+    }
+});

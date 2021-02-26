@@ -25,11 +25,11 @@ function App() {
             <TodoTaskPage />
           </Route>
 
-          <Route path="/edit-task/:taskId">
+          <Route path="/edit-task">
             <EditTask />
           </Route>
 
-          <Route path="/add-subtask/:parentId">
+          <Route path="/add-subtask/:parentTempId">
             <AddSubtask />
           </Route>
 

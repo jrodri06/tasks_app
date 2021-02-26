@@ -6,20 +6,20 @@ const route = Router();
 
 route.post('/', async (req: Request, res: Response) => {
     if(req.headers['x-http-method-override']  === 'DELETE')  {
-        const { id } = req.body;
+        const { subtaskTempId } = req.body;
         const userCookie = process.env.NODE_ENV === 'development' ? 
             'thisIsJustForTesting' : 
             req.cookies.tasksListUbi;
 
         try {
-            const sub = await SubTask.findOne({ _id: id });
+            const sub = await SubTask.findOne({ subtaskTempId });
             const subWithCookie = { 
                 ...sub?.toObject(),  
                 userCookie,
                 lastUpdatedBy: userCookie
             };
 
-            await SubTask.findOneAndDelete({ _id: id });
+            await SubTask.findOneAndDelete({ subtaskTempId });
             res.status(200).json(subWithCookie);
         } catch(err) {
             res.status(500).json({ message: `Your request was not processed: ${err.message}` });

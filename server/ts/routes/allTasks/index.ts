@@ -17,7 +17,7 @@ route.get('/', async (req: Request, res: Response) => {
         let position = 0;
     
         for (let task of allData) {
-            const results = await SubTask.find({ parentId: task._id });
+            const results = await SubTask.find({ parentTempId: task.tempIdentifier });
             if(results.length > 0) {
                 subTasks = [  ...subTasks, {
                     position,
@@ -29,7 +29,6 @@ route.get('/', async (req: Request, res: Response) => {
                     subTask: []
                 }]
             }
-    
             position++;
         };
         
@@ -44,7 +43,6 @@ route.get('/', async (req: Request, res: Response) => {
                     subtask: match.subTask
                 }
             }
-    
         });
 
         res.status(200).send(final);

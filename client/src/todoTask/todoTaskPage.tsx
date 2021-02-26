@@ -5,22 +5,24 @@ import swal from 'sweetalert';
 
 import Subtask from '../subTask';
 import SpecialInput from './specialInput';
+import { getUserCookie } from '../helperFunctions/getCookie';
 import { eraseTask, updateDoneStatus, getPricesTotal, getTask } from '../helperFunctions/requestsHandlers';
 
 interface TodoProps {
-    userCookie: String,
-    lastUpdatedBy: String,
-    name: String,
-    description: String,
-    type: String,
+    userCookie: string,
+    lastUpdatedBy: string,
+    name: string,
+    description: string,
+    type: string,
     specialInput: {
-        fooCarbs?: Number,
-        foodFat?: Number,
-        foodProtein?: Number,
+        fooCarbs?: number,
+        foodFat?: number,
+        foodProtein?: number,
         workDeadline?: string
     },
     subtask: [],
-    price: Number | null,
+    price: number | null,
+    tempIdentifier: string
     done: boolean,
     _id: string
 }
@@ -34,7 +36,9 @@ const TodoTaskPage = () => {
         description: '',
         type: 'Other',
         specialInput: {},
+        subtask: [],
         price: null,
+        tempIdentifier: '',
         done: false,
         _id: ''
     });
@@ -72,11 +76,7 @@ const TodoTaskPage = () => {
         };
 
         const checkLastEdit = () => {
-            const existingCookies = document.cookie;
-            const getVal = existingCookies.split('=');
-    
-            const name = getVal[getVal.length - 2];
-            const cookieVal = name === 'tasksListUbi' ? getVal[getVal.length - 1] : '';
+            const cookieVal = getUserCookie();
     
             if(cookieVal === '') {
                 setLastUpdateUser('Last updated by someone else');
@@ -99,12 +99,12 @@ const TodoTaskPage = () => {
     };
 
     const handleRedirect = () => {
-        history.push(`/add-subtask/${task._id}`);
+        history.push(`/add-subtask/${task.tempIdentifier}`);
     };
 
     const editPage = () => {
         history.push({
-            pathname: `/edit-task/${task._id}/${task.userCookie}`,
+            pathname: `/edit-task/${task.tempIdentifier}/${task.userCookie}`,
             state: { task }
         });
     }
@@ -116,7 +116,8 @@ const TodoTaskPage = () => {
 
         await updateDoneStatus({ 
             id: task._id!,
-            done: checked
+            done: checked,
+            tempIdentifier: task.tempIdentifier!
         });
     };
 
@@ -130,7 +131,7 @@ const TodoTaskPage = () => {
         })
             .then(async (willDelete) => {
                 if (willDelete) {
-                    await eraseTask(task._id!);
+                    await eraseTask(task._id!, task.tempIdentifier!);
 
 
                     swal('Your task has been deleted!', {
@@ -148,6 +149,10 @@ const TodoTaskPage = () => {
     };
 
     const copyLink = () => {
+        if(!navigator.onLine) {
+            return swal('Cannot copy', 'You seem to be offline', 'error');
+        }
+
         if(navigator.clipboard === undefined) {
             swal('Cannot copy', 'To be able to copy please go to the https version of the website', 'error');
         }
@@ -222,7 +227,7 @@ const TodoTaskPage = () => {
                     </span> 
                     { task.subtask !== undefined && task.subtask!.length > 0 && <Subtask 
                         subtasks={task.subtask!} 
-                        subTaskTotalPrice={getPricesTotal(task._id!)}
+                        subTaskTotalPrice={getPricesTotal(task.tempIdentifier!)}
                     /> }
                 </div>
 

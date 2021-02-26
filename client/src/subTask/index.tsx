@@ -38,18 +38,20 @@ const Subtask: FunctionComponent<SubtaskProps> = ({
             {
                 subtasks.map((elements: {
                     done: boolean
-                    name: String
-                    parentId: String 
+                    name: string
+                    parentTempId: string 
                     _id: string
-                    price: Number
+                    subtaskTempId: string
+                    price: number
                 }, i) => {
                     return <SubtaskView 
                         key={elements._id ? elements._id : i} 
                         id={elements._id}
                         done={elements.done} 
                         name={elements.name} 
+                        subtaskTempId={elements.subtaskTempId}
                         price={elements.price}
-                        parentId={elements.parentId} 
+                        parentTempId={elements.parentTempId} 
                         update={setDone}
                     />
                 })

@@ -3,9 +3,10 @@ import { FunctionComponent, useState } from 'react';
 type SubtaskViewProps = {
     done: boolean
     id:  string
-    name: String
-    price: Number
-    parentId: String
+    name: string
+    price: number | string
+    parentTempId: string
+    subtaskTempId: string
     update: React.Dispatch<React.SetStateAction<{}>>
 }
 
@@ -14,7 +15,8 @@ const SubtaskView: FunctionComponent<SubtaskViewProps> = ({
     id,
     name,
     price,
-    parentId,
+    parentTempId,
+    subtaskTempId,
     update
 }) => {
     const [concluded, setConcluded] = useState(done);
@@ -22,8 +24,9 @@ const SubtaskView: FunctionComponent<SubtaskViewProps> = ({
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         await update({
             taskId: id,
+            subtaskTempId,
             done: e.target.checked,
-            parentId
+            parentTempId
         });
 
         setConcluded(e.target.checked);
@@ -31,6 +34,7 @@ const SubtaskView: FunctionComponent<SubtaskViewProps> = ({
 
     const dragStart = (e: any) => {
         const target = e.target!;
+
         const name = target.querySelector('.subTasks-name').textContent;
 
         let price;
@@ -42,10 +46,10 @@ const SubtaskView: FunctionComponent<SubtaskViewProps> = ({
         }
 
         const subtaskBody = { 
-            id: target.id, 
+            subtaskTempId: target.id, 
             name, 
             price,
-            parentId
+            parentTempId
         };
             
         e.dataTransfer.setData('subtask_body', JSON.stringify(subtaskBody));
@@ -60,7 +64,7 @@ const SubtaskView: FunctionComponent<SubtaskViewProps> = ({
     };
 
     return (
-        <div id={id}
+        <div id={subtaskTempId}
             className="subTasks"
             draggable
             onDragStart={dragStart} 
@@ -74,7 +78,7 @@ const SubtaskView: FunctionComponent<SubtaskViewProps> = ({
                 />
                 <span className={concluded ? "subTasks-name concluded" : "subTasks-name"}>{name}</span>
             </div>
-            { price !== null && <span className={concluded ? "subTasks-price concluded" : "subTasks-price"}>{price}kr</span> }
+            { price !== null && price !== '' && <span className={concluded ? "subTasks-price concluded" : "subTasks-price"}>{price}kr</span> }
         </div>
     );
 };

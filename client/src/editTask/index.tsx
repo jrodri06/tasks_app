@@ -1,6 +1,7 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
+import { getUserCookie } from '../helperFunctions/getCookie';
 import { editTask } from '../helperFunctions/requestsHandlers';
 import { foodTypeValidation, workTypeValidation, emptyFields } from '../helperFunctions/formsValidation';
 
@@ -18,6 +19,7 @@ interface TodoProps {
     },
     price: Number | null,
     done: boolean,
+    tempIdentifier: string,
     _id: string
 }
 
@@ -42,6 +44,7 @@ const EditTask = () => {
         type: 'Other',
         specialInput: {},
         price: null,
+        tempIdentifier: '',
         done: false,
         _id: ''
     });
@@ -50,10 +53,7 @@ const EditTask = () => {
 
     useEffect(() => {
         // Get current user cookie
-        const existingCookies = document.cookie;
-        const getVal = existingCookies.split('=');
-        const name = getVal[getVal.length - 2];
-        const cookieVal = name === 'tasksListUbi' ? getVal[getVal.length - 1] : '';
+        const cookieVal = getUserCookie();
         setUserCookie(cookieVal);
 
         setTask(location.state.task);
