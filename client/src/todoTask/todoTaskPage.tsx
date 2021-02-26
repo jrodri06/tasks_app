@@ -7,6 +7,7 @@ import Subtask from '../subTask';
 import SpecialInput from './specialInput';
 import { getUserCookie } from '../helperFunctions/getCookie';
 import { eraseTask, updateDoneStatus, getPricesTotal, getTask } from '../helperFunctions/requestsHandlers';
+import { localTasks } from '../helperFunctions/localStorageHandlers';
 
 interface TodoProps {
     userCookie: string,
@@ -28,7 +29,6 @@ interface TodoProps {
 }
 
 const TodoTaskPage = () => {
-
     const [task, setTask] = useState<Partial<TodoProps>>({
         userCookie: '',
         lastUpdatedBy: '',
@@ -50,22 +50,26 @@ const TodoTaskPage = () => {
 
     useEffect(() => {
         const renderTask = async () => {
-            let selectedTask;
+            let selectedTask: any;
             const path = window.location.pathname;
             const pathDivided = path.split('/');
             const userOrigin = pathDivided[pathDivided.length - 1];
     
             // User from external link needs to fetch task details
             if(location.state === undefined) {
-                const taskId = pathDivided[pathDivided.length - 2];
+                const tempId = pathDivided[pathDivided.length - 2];
                 try {
-                    const response = await getTask(taskId, userOrigin);
+                    const response = await getTask(tempId, userOrigin);
                     selectedTask = response;
                 } catch(err) {
                     return swal('You are offline', `${err}` , 'error');
                 }   
             } else {
-                selectedTask = location.state.task
+                const localStorage = localTasks.getTasks();
+                selectedTask = JSON.parse(location.state);
+
+                const taskLocally = localStorage.find((task: { tempIdentifier: string }) => task.tempIdentifier === selectedTask.tempIdentifier);
+                selectedTask.subtask = taskLocally.subtask;
             }
     
             if(selectedTask === undefined) {
@@ -103,9 +107,11 @@ const TodoTaskPage = () => {
     };
 
     const editPage = () => {
+        const t = JSON.stringify(task);
+
         history.push({
             pathname: `/edit-task/${task.tempIdentifier}/${task.userCookie}`,
-            state: { task }
+            state: t
         });
     }
 

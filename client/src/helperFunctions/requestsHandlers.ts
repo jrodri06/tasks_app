@@ -27,10 +27,10 @@ const handlePostWhenOffline = async (
             localTasks.updateTaskFromList(details);
         } else if(direction.includes('new-subtask')) {
             offlineService.updateQueue(allQueues.newSubtasksQueue, details);
-            localTasks.createSubtaskToList(details);
+            // localTasks.createSubtaskToList(details);
         } else if(direction.includes('update-subtask')) {
             offlineService.updateQueue(allQueues.updateSubtasksQueue, details);
-            localTasks.updateSubtaskFromList(details);
+            // localTasks.updateSubtaskFromList(details);
         } else if(direction.includes('remove-subtask')) {
             const newTask = {
                 name: details.name, 
@@ -230,8 +230,6 @@ export const editTask = async (task: Object,  cb: Function) => {
     cb();
 }
 
-
-
 export const getPricesTotal = (tempIdentifier: String) => {
     const currentTasks = localTasks.getTasks();
 
@@ -253,13 +251,13 @@ export const getPricesTotal = (tempIdentifier: String) => {
 
 // Task from another user
 // Online required
-export const getTask = async (taskId: String, userOrigin: String) => {
+export const getTask = async (tempId: String, userOrigin: String) => {
     if (!navigator.onLine) {
         throw Error('You need to be online so we can deliver the data to you');
     }
 
     try {
-        const response = await fetch(`${localHost}/task/get-task/${taskId}/${userOrigin}`);
+        const response = await fetch(`${localHost}/task/get-task/${tempId}/${userOrigin}`);
         const data = await response.json();
 
         if(response.status === 500 || response.status === 404 || response.status === 400) {

@@ -48,21 +48,23 @@ const ToDo: FunctionComponent<ToDoProps> = ({
     const editPage = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.stopPropagation();
 
+        const task = JSON.stringify({
+            _id: id,
+            name,
+            done,
+            description,
+            type,
+            specialInput,
+            userCookie,
+            lastUpdatedBy,
+            price,
+            tempIdentifier,
+            subtask
+        });
+
         history.push({
-            pathname: `/edit-task/${id}/${userCookie}`,
-            state: { task: {
-                _id: id,
-                name,
-                done,
-                description,
-                type,
-                specialInput,
-                userCookie,
-                lastUpdatedBy,
-                price,
-                tempIdentifier,
-                subtask
-            }}
+            pathname: `/edit-task/${tempIdentifier}/${userCookie}`,
+            state: task
         })
     }
 
@@ -91,9 +93,7 @@ const ToDo: FunctionComponent<ToDoProps> = ({
                 done: checked, 
                 id
             })
-
         }, 250)
-
     };
 
     const handleDeleteSubmit = async (e: React.MouseEvent) => {
@@ -128,22 +128,25 @@ const ToDo: FunctionComponent<ToDoProps> = ({
     };
 
     const taskPage = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        const task = JSON.stringify({
+            _id: id,
+            name,
+            done,
+            description,
+            type,
+            specialInput,
+            userCookie,
+            lastUpdatedBy,
+            price,
+            tempIdentifier,
+            subtask,
+            childUpdate
+        });
+
         history.push({
-            pathname: `/task/${id}/${userCookie}`,
-            state: { task: {
-                _id: id,
-                name,
-                done,
-                description,
-                type,
-                specialInput,
-                userCookie,
-                lastUpdatedBy,
-                price,
-                tempIdentifier,
-                subtask
-            }}
-        })
+            pathname: `/task/${tempIdentifier}/${userCookie}`,
+            state: task
+        });
     };
 
     return (

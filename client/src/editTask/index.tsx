@@ -1,8 +1,9 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
+import swal from 'sweetalert';
 
 import { getUserCookie } from '../helperFunctions/getCookie';
-import { editTask } from '../helperFunctions/requestsHandlers';
+import { editTask, getTask } from '../helperFunctions/requestsHandlers';
 import { foodTypeValidation, workTypeValidation, emptyFields } from '../helperFunctions/formsValidation';
 
 interface TodoProps {
@@ -26,15 +27,7 @@ interface TodoProps {
 const EditTask = () => {
     const history = useHistory();
 
-    const backToDashboard = () =>{
-        history.push('/');
-    };
-
-    const location: { 
-        state: { 
-            task: object 
-        } 
-    } = useLocation();
+    const location: any = useLocation();
 
     const [task, setTask] = useState<Partial<TodoProps>>({
         userCookie: '',
@@ -49,6 +42,15 @@ const EditTask = () => {
         _id: ''
     });
 
+    const backToTask = () => {
+        const t = JSON.stringify(task);
+
+        history.push({
+            pathname: `/task/${task.tempIdentifier}/${task.userCookie}`,
+            state: t
+        });
+    };
+
     const [userCookie, setUserCookie] = useState('');
 
     useEffect(() => {
@@ -56,7 +58,27 @@ const EditTask = () => {
         const cookieVal = getUserCookie();
         setUserCookie(cookieVal);
 
-        setTask(location.state.task);
+        const renderTask = async () => {
+            const path = window.location.pathname;
+            const pathDivided = path.split('/');
+            const userOrigin = pathDivided[pathDivided.length - 1];
+    
+            // User from external link needs to fetch task details
+            if(location.state === undefined) {
+                const tempId = pathDivided[pathDivided.length - 2];
+                try {
+                    const response = await getTask(tempId, userOrigin);
+                    setTask(response);
+                } catch(err) {
+                    return swal('You are offline', `${err}` , 'error');
+                }   
+            } else {
+                const t = JSON.parse(location.state);
+                setTask(t);
+            }
+        };
+
+        renderTask();
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     const handleChange = (userInput: ChangeEvent) => {
@@ -106,17 +128,17 @@ const EditTask = () => {
             case 'Food':
                 const validFoodTypes = foodTypeValidation(task.specialInput!);
                 if(validFoodTypes) {
-                    await editTask(task, backToDashboard);
+                    await editTask(task, backToTask);
                 }
                 break;
             case 'Work':
                 const validDeadline = workTypeValidation(task.specialInput!);
                 if(validDeadline) {
-                    await editTask(task, backToDashboard);
+                    await editTask(task, backToTask);
                 }
                 break;
             default:
-                await editTask(task, backToDashboard);
+                await editTask(task, backToTask);
         }
     };
 
@@ -148,7 +170,7 @@ const EditTask = () => {
 
     return (
         <form className="create-add" onSubmit={handleSubmit}>
-            <span className="exit" onClick={backToDashboard}>{'\u2716'}</span>
+            <span className="exit" onClick={backToTask}>{'\u2716'}</span>
             <h1>Edit Task</h1>
             <label>
                 Name

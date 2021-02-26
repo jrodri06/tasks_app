@@ -2,6 +2,7 @@ import { FunctionComponent, useState } from 'react';
 
 import SubtaskView from './SubtaskView';
 import { updateSubTaskDone } from '../helperFunctions/requestsHandlers';
+import { localTasks } from '../helperFunctions/localStorageHandlers';
 
 type SubtaskProps = {
     subtasks: []
@@ -16,6 +17,8 @@ const Subtask: FunctionComponent<SubtaskProps> = ({
 
     const updateSubtask = async () => {
         await updateSubTaskDone(done);
+        localTasks.updateSubtaskFromList(done);
+
         setDone({});
     };
 

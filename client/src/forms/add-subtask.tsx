@@ -2,6 +2,7 @@ import { ChangeEvent, FormEvent, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { createSubTask } from '../helperFunctions/requestsHandlers';
+import { localTasks } from '../helperFunctions/localStorageHandlers';
 
 interface ParamTypes {
     parentTempId: string
@@ -19,8 +20,9 @@ const AddSubtask = () => {
     });
 
     const history = useHistory();
+
     const backToDashboard = () =>{
-        history.push('/');
+        history.goBack();
     };
 
     const handleChange = (userInput: ChangeEvent) => {
@@ -39,6 +41,8 @@ const AddSubtask = () => {
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
+        localTasks.createSubtaskToList(subTask);
+        
         createSubTask(subTask);
         backToDashboard();
     };
