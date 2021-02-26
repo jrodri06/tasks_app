@@ -46,7 +46,10 @@ const AddSubtask = () => {
 
         const localStorage = localTasks.getTasks();
         if(localStorage.length > 0) {
-            localTasks.createSubtaskToList(subTask);
+            const currentTask = localStorage.find((task: { tempIdentifier: string }) => task.tempIdentifier === subTask.parentTempId);
+            if(currentTask !== undefined){
+                localTasks.createSubtaskToList(subTask);
+            }
         }
 
         backToDashboard();

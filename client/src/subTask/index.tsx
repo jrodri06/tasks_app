@@ -17,7 +17,15 @@ const Subtask: FunctionComponent<SubtaskProps> = ({
 
     const updateSubtask = async () => {
         await updateSubTaskDone(done);
-        localTasks.updateSubtaskFromList(done);
+
+        const localStorage = localTasks.getTasks();
+        if(localStorage.length > 0) {
+            const d: any = done;
+            const currentTask = localStorage.find((task: { tempIdentifier: string }) => task.tempIdentifier === d.parentTempId);
+            if(currentTask !== undefined){
+                localTasks.updateSubtaskFromList(done);
+            }
+        }
 
         setDone({});
     };
