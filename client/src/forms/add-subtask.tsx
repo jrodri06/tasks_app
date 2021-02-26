@@ -43,8 +43,12 @@ const AddSubtask = () => {
         e.preventDefault();
 
         createSubTask(subTask);
-        localTasks.createSubtaskToList(subTask);
-        
+
+        const localStorage = localTasks.getTasks();
+        if(localStorage.length > 0) {
+            localTasks.createSubtaskToList(subTask);
+        }
+
         backToDashboard();
     };
 
