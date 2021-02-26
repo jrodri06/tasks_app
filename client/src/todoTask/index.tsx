@@ -93,9 +93,7 @@ const ToDo: FunctionComponent<ToDoProps> = ({
                 done: checked, 
                 id
             })
-
         }, 250)
-
     };
 
     const handleDeleteSubmit = async (e: React.MouseEvent) => {

@@ -49,10 +49,8 @@ const TodoTaskPage = () => {
     const location: any = useLocation();
 
     useEffect(() => {
-        console.log('Use Effect');
-        
         const renderTask = async () => {
-            let selectedTask;
+            let selectedTask: any;
             const path = window.location.pathname;
             const pathDivided = path.split('/');
             const userOrigin = pathDivided[pathDivided.length - 1];
@@ -68,8 +66,10 @@ const TodoTaskPage = () => {
                 }   
             } else {
                 const localStorage = localTasks.getTasks();
-                
                 selectedTask = JSON.parse(location.state);
+
+                const taskLocally = localStorage.find((task: { tempIdentifier: string }) => task.tempIdentifier === selectedTask.tempIdentifier);
+                selectedTask.subtask = taskLocally.subtask;
             }
     
             if(selectedTask === undefined) {

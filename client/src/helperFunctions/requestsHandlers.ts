@@ -27,10 +27,10 @@ const handlePostWhenOffline = async (
             localTasks.updateTaskFromList(details);
         } else if(direction.includes('new-subtask')) {
             offlineService.updateQueue(allQueues.newSubtasksQueue, details);
-            localTasks.createSubtaskToList(details);
+            // localTasks.createSubtaskToList(details);
         } else if(direction.includes('update-subtask')) {
             offlineService.updateQueue(allQueues.updateSubtasksQueue, details);
-            localTasks.updateSubtaskFromList(details);
+            // localTasks.updateSubtaskFromList(details);
         } else if(direction.includes('remove-subtask')) {
             const newTask = {
                 name: details.name, 
